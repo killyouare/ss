@@ -1,23 +1,49 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
-import HomeView from "../views/HomeView.vue";
+import WorkerView from "../views/WorkerView.vue";
+import OrderView from "../views/OrderView.vue";
+import WorkShiftView from "../views/WorkShiftView.vue";
+import LoginComponent from "../components/LoginComponent.vue";
+import WorkerComponent from "../components/WorkerComponent.vue";
+import WorkShiftComponent from "../components/WorkShiftComponent.vue";
+import OrderComponent from "../components/OrderComponent.vue";
 Vue.use(VueRouter);
 
 const routes = [
   {
-    path: "/",
-    name: "home",
-    component: HomeView,
+    path: "/workers",
+    name: "workers",
+    component: WorkerView,
   },
-
   {
-    path: "/about",
-    name: "about",
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () =>
-      import(/* webpackChunkName: "about" */ "../views/AboutView.vue"),
+    path: "/shifts",
+    name: "shifts",
+    component: WorkShiftView,
+  },
+  {
+    path: "/orders",
+    name: "orders",
+    component: OrderView,
+  },
+  {
+    path: "/login",
+    name: "login",
+    component: LoginComponent,
+  },
+  {
+    path: "/addWorker",
+    name: "addWorker",
+    component: WorkerComponent,
+  },
+  {
+    path: "/addWorkShift",
+    name: "addWorkShift",
+    component: WorkShiftComponent,
+  },
+  {
+    path: "/addOrder",
+    name: "addOrder",
+    component: OrderComponent,
   },
 ];
 

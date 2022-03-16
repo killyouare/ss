@@ -76,8 +76,7 @@ header > nav {
   margin-left: 50px;
 }
 
-header > nav > a,
-.btn {
+header > nav > a {
   border: 1px solid #005fb6;
   border-radius: 15px;
   padding: 15px 20px;
@@ -134,7 +133,7 @@ header img {
   font-weight: bold;
 }
 
-.employees > article > button {
+.employees > article > a {
   border: 1px solid #005fb6;
   border-radius: 15px;
   padding: 10px 15px;
@@ -147,7 +146,7 @@ header img {
   max-width: 200px;
 }
 
-.employees > article:nth-child(2n + 1) > button {
+.employees > article:nth-child(2n + 1) > a {
   border: 1px solid #005fb6;
   border-radius: 15px;
   padding: 10px 15px;
@@ -159,7 +158,7 @@ header img {
   cursor: pointer;
 }
 
-.employees > article:first-child > button:last-child {
+.employees > article:first-child > a:last-child {
   background: rgba(108, 201, 15, 0.8);
   font-size: 28pt;
   font-style: normal;
@@ -217,7 +216,7 @@ header img {
   font-size: 1.3rem;
 }
 
-.shift > article > button {
+.shift > article > a {
   padding: 1rem;
   font-size: 1.3rem;
   font-weight: bold;
@@ -270,7 +269,7 @@ header img {
   font-size: 1.3rem;
 }
 
-.orders > article > button {
+.orders > article > a {
   padding: 1rem;
   font-size: 1.3rem;
   font-weight: bold;

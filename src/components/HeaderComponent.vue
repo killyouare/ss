@@ -10,7 +10,7 @@
       <a @click.prevent="$emit('open')" href="#" class="approve_button">
         Вход</a
       >
-      <a href="#" class="cancel_button">Выход</a>
+      <a @click.prevent="logout" href="#" class="cancel_button">Выход</a>
     </nav>
   </header>
 </template>
@@ -18,5 +18,13 @@
 <script>
 export default {
   name: "NavigationComponent",
+  methods: {
+    async logout() {
+      await this.$store.dispatch("Logout", this.$store.getters.getToken);
+    },
+  },
+  async mounted() {
+    await this.$store.dispatch("CheckUser");
+  },
 };
 </script>

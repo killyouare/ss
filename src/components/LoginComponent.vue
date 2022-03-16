@@ -1,5 +1,6 @@
 <template>
   <article class="modal">
+    <Error v-if="errors" />
     <form @submit.prevent>
       <h2>Авторизация</h2>
       <div>
@@ -19,26 +20,28 @@
 </template>
 
 <script>
+import Error from "./ErrorComponent";
 export default {
+  name: "LoginComponent",
+  components: { Error },
   data: () => ({
     body: {
       login: "",
       password: "",
     },
-    errors: [],
+    errors: false,
   }),
   methods: {
     async authenticate() {
       await this.$store.dispatch("Login", this.body);
       const token = this.$store.getters.getToken;
-      console.log(token);
-      if (token) return this.restore();
+      if (token) return this.$emit("open");
+      return (this.errors = true);
     },
-    restore() {
-      this.$emit("open");
-      this.body.login = "";
-      this.body.password = "";
-    },
+  },
+  destroyed() {
+    this.body = "";
+    this.errors = "";
   },
 };
 </script>

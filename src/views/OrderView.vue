@@ -1,49 +1,39 @@
 <template>
   <section class="orders">
-    <router-link to="/addOrder" class="approve_button"
-      >Принять заказ</router-link
-    >
-    <article>
-      <h2>Столик №1</h2>
-      <p>Официант: John</p>
-      <p class="fired">Статус: Отмена</p>
-      <p>Цена: 9238</p>
-      <button class="approve_button">Управление</button>
-    </article>
-    <article>
-      <h2>Столик №2</h2>
-      <p>Официант: John</p>
-      <p class="working">Статус: Принят</p>
-      <p>Цена: 238</p>
-      <button class="approve_button">Управление</button>
-    </article>
-    <article>
-      <h2>Столик №3</h2>
-      <p>Официант: John</p>
-      <p class="working">Статус: Готов</p>
-      <p>Цена: 1436</p>
-      <button class="approve_button">Управление</button>
-    </article>
-    <article>
-      <h2>Столик №4</h2>
-      <p>Официант: John</p>
-      <p class="working">Статус: Оплачен</p>
-      <p>Цена: 2316</p>
-      <button class="approve_button">Управление</button>
-    </article>
-    <article>
-      <h2>Столик №5</h2>
-      <p>Официант: John</p>
-      <p class="working">Статус: Оплачен</p>
-      <p>Цена: 345345</p>
-      <button class="approve_button">Управление</button>
-    </article>
-    <article>
-      <h2>Столик №6</h2>
-      <p>Официант: Mike</p>
-      <p class="working">Статус: Оплачен</p>
-      <p>Цена: 1212</p>
-      <button class="approve_button">Управление</button>
-    </article>
+    <WorkShift
+      :id="workShift.id"
+      :start="workShift.start"
+      :end="workShift.end"
+      :active="workShift.active"
+    />
+    <Order
+      v-for="order in workShift.orders"
+      :key="order.id"
+      :id="order.id"
+      :table="order.table"
+      :shift_workers="order.shift_workers"
+      :status="order.status"
+      :price="order.price"
+    />
   </section>
 </template>
+
+<script>
+import Order from "../components/OrderComponent";
+import WorkShift from "../components/WorkShiftComponent";
+export default {
+  data() {
+    return {
+      workShift: [],
+    };
+  },
+  components: { Order, WorkShift },
+  async mounted() {
+    this.workShift = await this.$store.dispatch(
+      "GetOrders",
+      this.$route.params.id
+    );
+    console.log(this.orders);
+  },
+};
+</script>

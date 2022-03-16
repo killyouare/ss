@@ -1,6 +1,8 @@
 <template>
   <section class="orders">
-    <button class="approve_button">Принять заказ</button>
+    <router-link to="/addOrder" class="approve_button"
+      >Принять заказ</router-link
+    >
     <article>
       <h2>Столик №1</h2>
       <p>Официант: John</p>

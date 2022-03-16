@@ -1,39 +1,21 @@
 <template>
   <article class="modal">
     <form @submit.prevent>
-      <h2>Добавление нового сотрудника</h2>
+      <h2>Добавление заказа</h2>
       <div>
-        <label for="name">Имя</label>
-        <input type="text" v-model="name" name="name" id="name" />
+        <label for="work_shift_id">Работник</label>
+        <input type="text" name="login" id="work_shift_id" />
       </div>
       <div>
-        <label for="login">Логин</label>
-        <input type="text" v-model="login" name="login" id="login" />
+        <label for="table_id">Номер столика</label>
+        <input type="number" name="password" id="table_id" />
       </div>
       <div>
-        <label for="password">Пароль</label>
-        <input
-          type="password"
-          v-model="password"
-          name="password"
-          id="password"
-        />
+        <label for="number_of_person">Количество персон</label>
+        <input type="number" name="password" id="number_of_person" />
       </div>
       <div>
-        <label for="photo_file" class="photo_input">Фото</label>
-        <input type="file" name="photo" id="photo_file" />
-      </div>
-      <div>
-        <label for="role">Роль</label>
-        <select v-model="role" name="role" id="role">
-          <option value="nothing" selected disabled>Выберите роль:</option>
-          <option value="1">Администратор</option>
-          <option value="2">Официант</option>
-          <option value="3">Повар</option>
-        </select>
-      </div>
-      <div>
-        <button @click="authenticate" class="approve_button">Отправить</button>
+        <button class="approve_button">Отправить</button>
         <button class="cancel_button">Отмена</button>
       </div>
     </form>

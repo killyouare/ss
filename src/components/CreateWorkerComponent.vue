@@ -1,20 +1,21 @@
 <template>
   <article class="modal">
+    <Error v-if="errors" />
     <form @submit.prevent>
       <h2>Добавление нового сотрудника</h2>
       <div>
         <label for="name">Имя</label>
-        <input type="text" v-model="name" name="name" id="name" />
+        <input type="text" v-model="body.name" name="name" id="name" />
       </div>
       <div>
-        <label for="login">Логин</label>
-        <input type="text" v-model="login" name="login" id="login" />
+        <label required for="login">Логин</label>
+        <input type="text" v-model="body.login" name="login" id="login" />
       </div>
       <div>
-        <label for="password">Пароль</label>
+        <label required for="password">Пароль</label>
         <input
           type="password"
-          v-model="password"
+          v-model="body.password"
           name="password"
           id="password"
         />
@@ -25,7 +26,7 @@
       </div>
       <div>
         <label for="role">Роль</label>
-        <select v-model="role" name="role" id="role">
+        <select required v-model="body.role_id" name="role" id="role">
           <option value="nothing" selected disabled>Выберите роль:</option>
           <option value="1">Администратор</option>
           <option value="2">Официант</option>
@@ -33,30 +34,28 @@
         </select>
       </div>
       <div>
-        <button @click="authenticate" class="approve_button">Отправить</button>
-        <button class="cancel_button">Отмена</button>
+        <button @click="$emit('create')" class="approve_button">
+          Отправить
+        </button>
+        <button @click="$emit('open')" class="cancel_button">Отмена</button>
       </div>
     </form>
   </article>
 </template>
 
 <script>
+import Error from "./ErrorComponent";
+
 export default {
   data: () => ({
-    login: "",
-    name: "",
-    password: "",
-    role: "",
-    photofile: "",
+    body: { login: "", name: "", password: "", role: "" },
+    errors: false,
   }),
-  methods: {
-    async authenticate() {
-      const body = {
-        login: this.login,
-        password: this.password,
-      };
-      console.log(body);
-    },
+  methods: {},
+  destroyed() {
+    this.body = "";
+    this.errors = "";
   },
+  components: { Error },
 };
 </script>

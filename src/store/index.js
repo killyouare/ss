@@ -15,8 +15,9 @@ export default new Vuex.Store({
       state.token = token;
     },
     setError(state, error) {
-      if (error.errors) state.error.set("errors", error.errors);
-      state.error.set("message", error.message);
+      for (let i in error) {
+        state.error.set(i, error[i]);
+      }
     },
     clearToken(state) {
       state.token = ""
@@ -24,7 +25,7 @@ export default new Vuex.Store({
   },
   actions: {
     async Login(context, body) {
-      await fetch("http://127.0.0.1:8000/api-cafe/login", {
+      await fetch("http://localhost/api-cafe/login", {
         method: "POST",
         headers: {
           "Content-type": "application/json"
@@ -37,7 +38,7 @@ export default new Vuex.Store({
         .catch(err => err)
     },
     async Logout(context) {
-      await fetch("http://127.0.0.1:8000/api-cafe/logout", {
+      await fetch("http://localhost/api-cafe/logout", {
         method: "GET",
         headers: {
           "Content-type": "application/json",
@@ -48,7 +49,7 @@ export default new Vuex.Store({
       context.commit("clearToken")
     },
     async GetUsers() {
-      const users = await fetch("http://127.0.0.1:8000/api-cafe/user", {
+      const users = await fetch("http://localhost/api-cafe/user", {
         method: "GET",
         headers: {
           "Content-type": "application/json",
@@ -59,7 +60,7 @@ export default new Vuex.Store({
       return users.data;
     },
     async GetUser(context, id) {
-      const user = await fetch(`http://127.0.0.1:8000/api-cafe/user/${id}`, {
+      const user = await fetch(`http://localhost/api-cafe/user/${id}`, {
         method: "GET",
         headers: {
           "Content-type": "application/json",
@@ -69,8 +70,36 @@ export default new Vuex.Store({
         .then(res => res.json()).catch(e => console.log(e))
       return user.data;
     },
+    async CreateUser(context, body) {
+      let formData = new FormData();
+      for (let i in body) {
+        formData.append(i, body[i]);
+      }
+      const user = await fetch(`http://localhost/api-cafe/user`, {
+        method: "POST",
+        headers: {
+          "Authorization": `Bearer ${this.getters.getToken}`
+        },
+        body: formData
+      })
+        .then(res => res.json())
+        .then(res => res.data ? res : context.commit("setError", res.error))
+        .catch(e => console.log(e))
+      return user;
+    },
+    async dismiss(context, id) {
+      const user = await fetch(`http://localhost/api-cafe/user/${id}/to-dismiss`, {
+        method: "get",
+        headers: {
+          "Authorization": `Bearer ${this.getters.getToken}`
+        },
+      })
+        .then(res => res.json())
+        .catch(e => console.log(e))
+      return user;
+    },
     async GetWorkShifts() {
-      const workShifts = await fetch("http://127.0.0.1:8000/api-cafe/work-shift", {
+      const workShifts = await fetch("http://localhost/api-cafe/work-shift", {
         method: "GET",
         headers: {
           "Content-type": "application/json",
@@ -81,7 +110,7 @@ export default new Vuex.Store({
       return workShifts;
     },
     async GetOrders(context, id) {
-      const orders = await fetch(`http://127.0.0.1:8000/api-cafe/work-shift/${id}/order`, {
+      const orders = await fetch(`http://localhost/api-cafe/work-shift/${id}/order`, {
         method: "GET",
         headers: {
           "Content-type": "application/json",

@@ -35,7 +35,11 @@ export default {
     async authenticate() {
       await this.$store.dispatch("Login", this.body);
       const token = this.$store.getters.getToken;
-      if (token) return this.$emit("open");
+
+      if (token) {
+        this.$emit("open");
+        return this.$router.push("/workers");
+      }
       return (this.errors = true);
     },
   },

@@ -21,6 +21,7 @@ export default {
   methods: {
     async logout() {
       await this.$store.dispatch("Logout", this.$store.getters.getToken);
+      this.$router.push("/");
     },
   },
   async mounted() {

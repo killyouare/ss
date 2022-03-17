@@ -1,6 +1,6 @@
 <template>
   <section class="employees">
-    <Modal v-if="openModal" @open="OpenModal" />
+    <Modal v-if="openModal" @open="OpenModal" @add="add" />
     <article>
       <span>Имя</span>
       <span>Статус</span>
@@ -14,8 +14,6 @@
       :name="user.name"
       :group="user.group"
       :status="user.status"
-      :error="error"
-      @create="Create($event)"
     />
   </section>
 </template>
@@ -36,19 +34,13 @@ export default {
     this.users = await this.$store.dispatch("GetUsers");
   },
   methods: {
-    async OpenModal() {
+    add(body) {
+      console.log(body);
+      this.users.push(body);
+    },
+    OpenModal() {
       this.openModal = !this.openModal;
     },
-    async Create(body) {
-      const photo = document.querySelector('input[type="file"]').files[0];
-      if (photo) body.photo_file = photo;
-      const message = await this.$store.dispatch("CreateUser", body);
-      if (message) return this.OpenModal();
-      this.errors = true;
-    },
-  },
-  async updated() {
-    this.users = await this.$store.dispatch("GetUsers");
   },
 };
 </script>

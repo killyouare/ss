@@ -2,11 +2,8 @@
   <article>
     <h2>{{ table }}</h2>
     <p>Официант: {{ shift_workers }}</p>
-    <p :class="active ? 'working' : 'fired'">
-      Статус: {{ active ? "Открыта" : "Закрыта" }}
-    </p>
+    <p>Статус: {{ status }}</p>
     <p>Цена: {{ price }}</p>
-    <button class="approve_button">Управление</button>
   </article>
 </template>
 

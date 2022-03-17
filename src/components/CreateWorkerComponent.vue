@@ -34,7 +34,7 @@
         </select>
       </div>
       <div>
-        <button @click="$emit('create')" class="approve_button">
+        <button @click.prevent="create" class="approve_button">
           Отправить
         </button>
         <button @click="$emit('open')" class="cancel_button">Отмена</button>
@@ -48,13 +48,33 @@ import Error from "./ErrorComponent";
 
 export default {
   data: () => ({
-    body: { login: "", name: "", password: "", role: "" },
+    body: { login: "", name: "", password: "", role_id: "" },
+    roles: ["Администратор", "Официант", "Повар"],
     errors: false,
   }),
-  methods: {},
+  methods: {
+    async create() {
+      this.errors = false;
+      const photo = document.querySelector('input[type="file"]').files[0];
+      if (photo) this.body.photo_file = photo;
+      const message = await this.$store.dispatch("CreateUser", this.body);
+      if (message) {
+        this.$emit("add", {
+          login: this.body.login,
+          group: this.roles[this.body.role_id - 1],
+          name: this.body.name,
+          status: "working",
+        });
+        return this.$emit("open");
+      }
+      this.errors = true;
+    },
+  },
+
   destroyed() {
-    this.body = "";
-    this.errors = "";
+    this.body = null;
+    this.roles = null;
+    this.errors = null;
   },
   components: { Error },
 };

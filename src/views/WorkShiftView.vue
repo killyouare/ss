@@ -1,6 +1,7 @@
 <template>
   <section class="shift">
-    <button class="approve_button">Добавить смену</button>
+    <a @click.prevent="OpenModal" class="approve_button">Добавить смену</a>
+    <Modal v-if="modal" @open="OpenModal" @add="add" />
     <WorkShift
       v-for="workShift in workShifts"
       :key="workShift.id"
@@ -14,13 +15,23 @@
 
 <script>
 import WorkShift from "../components/WorkShiftComponent";
+import Modal from "../components/CreateWorkShiftComponent";
 export default {
   data() {
     return {
       workShifts: [],
+      modal: false,
     };
   },
-  components: { WorkShift },
+  components: { WorkShift, Modal },
+  methods: {
+    OpenModal() {
+      this.modal = !this.modal;
+    },
+    add(body) {
+      this.workShifts.push(body);
+    },
+  },
   async mounted() {
     this.workShifts = await this.$store.dispatch("GetWorkShifts");
   },

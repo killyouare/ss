@@ -33,7 +33,6 @@ export default {
 
   async mounted() {
     this.user = await this.$store.dispatch("GetUser", this.$route.params.id);
-    console.log(this.user);
   },
   methods: {
     dismiss: async function () {

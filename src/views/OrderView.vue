@@ -20,7 +20,7 @@
 
 <script>
 import Order from "../components/OrderComponent";
-import WorkShift from "../components/WorkShiftComponent";
+import WorkShift from "../components/DetailWorkShiftComponent";
 export default {
   data() {
     return {

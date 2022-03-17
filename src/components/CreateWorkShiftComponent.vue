@@ -1,37 +1,67 @@
 <template>
   <article class="modal">
+    <Error v-if="errors" />
     <form @submit.prevent>
       <h2>Добавление смены</h2>
       <div>
         <label for="start">Начало</label>
-        <input type="datetime-local" v-model="start" name="login" id="start" />
+        <input
+          type="datetime-local"
+          v-model="body.start"
+          name="login"
+          id="start"
+        />
       </div>
       <div>
         <label for="end">Конец</label>
-        <input type="datetime-local" v-model="end" name="password" id="end" />
+        <input
+          type="datetime-local"
+          v-model="body.end"
+          name="password"
+          id="end"
+        />
       </div>
       <div>
-        <button class="approve_button">Отправить</button>
-        <button class="cancel_button">Отмена</button>
+        <button @click.prevent="createWorkShift" class="approve_button">
+          Отправить
+        </button>
+        <button @click="$emit('open')" class="cancel_button">Отмена</button>
       </div>
     </form>
   </article>
 </template>
 
 <script>
+import Error from "./ErrorComponent";
 export default {
   data: () => ({
-    start: "",
-    end: "",
+    body: {
+      start: "",
+      end: "",
+    },
+    errors: false,
   }),
   methods: {
-    async authenticate() {
-      const body = {
-        login: this.login,
-        password: this.password,
-      };
-      console.log(body);
+    async createWorkShift() {
+      const result = await this.$store.dispatch("CreateWorkShift", {
+        start: this.body.start.replace("T", " "),
+        end: this.body.end.replace("T", " "),
+      });
+      if (result) {
+        this.$emit("add", {
+          start: this.body.start.replace("T", " "),
+          end: this.body.end.replace("T", " "),
+          id: result.id,
+        });
+        return this.$emit("open");
+      }
+      this.errors = true;
     },
+  },
+  components: { Error },
+  destroyed() {
+    this.body = null;
+    this.errors = null;
   },
 };
 </script>

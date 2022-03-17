@@ -4,6 +4,7 @@ import WorkersView from "../views/WorkersView.vue";
 import WorkerView from "../views/WorkerView.vue";
 import OrderView from "../views/OrderView.vue";
 import WorkShiftView from "../views/WorkShiftView.vue";
+import WorkerOnShift from "../views/WorkerOnShift.vue";
 
 Vue.use(VueRouter);
 
@@ -27,6 +28,11 @@ const routes = [
     path: "/shifts/:id",
     name: "orders",
     component: OrderView,
+  },
+  {
+    path: "/shifts/:id/workers",
+    name: "WorkerOnShift",
+    component: WorkerOnShift,
   },
 ];
 

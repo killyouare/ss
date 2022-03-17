@@ -2,7 +2,7 @@
   <div class="error">
     {{ map.get("message") }}
     <div v-if="map.get('errors')">
-      <div v-for="error in map.get('errors')" :key="error">
+      <div v-for="(error, index) in map.get('errors')" :key="index">
         {{ error }}
       </div>
     </div>
@@ -16,6 +16,9 @@ export default {
   }),
   mounted() {
     this.map = this.$store.getters.getErrors;
+  },
+  destroyed() {
+    this.map = "";
   },
 };
 </script>

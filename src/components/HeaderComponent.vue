@@ -14,7 +14,7 @@
       >
       <router-link v-if="role == 'admin'" to="/workers">Сотрудники</router-link>
       <router-link v-if="role == 'admin'" to="/shifts">Смены</router-link>
-      <router-link v-if="role == 'admin'" to="/orders">Заказы</router-link>
+      <router-link v-if="role == 'waiter'" to="/orders">Заказы</router-link>
       <a v-if="token" @click.prevent="logout" href="#" class="cancel_button"
         >Выход</a
       >

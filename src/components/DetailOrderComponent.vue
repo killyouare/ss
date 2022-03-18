@@ -6,11 +6,6 @@
     <p :class="active ? 'working' : 'fired'">
       Статус: {{ active ? "Открыта" : "Закрыта" }}
     </p>
-    <router-link
-      class="approve_button"
-      :to="{ name: 'WorkerOnShift', params: { id: id } }"
-      >Добавить сотрудников</router-link
-    >
   </article>
 </template>
 
@@ -18,12 +13,5 @@
 export default {
   name: "WorkShiftComponent",
   props: ["id", "start", "end", "active"],
-  data() {
-    return {
-      errors: false,
-      activese: this.active,
-    };
-  },
-  methods: {},
 };
 </script>

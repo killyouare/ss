@@ -33,7 +33,6 @@ export default {
       "GetOrders",
       this.$route.params.id
     );
-    console.log(this.orders);
   },
 };
 </script>

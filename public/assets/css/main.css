@@ -43,6 +43,10 @@
 a {
   color: #fff;
   text-decoration: none;
+  transition: transform 800ms;
+}
+a:hover {
+  transform: rotate(-15deg);
 }
 
 /* modal */

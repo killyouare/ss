@@ -30,7 +30,7 @@ export default new Vuex.Store({
   },
   actions: {
     async Login(context, body) {
-      await fetch("http://127.0.0.1:8000/api-cafe/login", {
+      await fetch("http://localhost/api-cafe/login", {
         method: "POST",
         headers: {
           "Content-type": "application/json"
@@ -44,7 +44,7 @@ export default new Vuex.Store({
       context.dispatch("getRole");
     },
     async Logout(context) {
-      await fetch("http://127.0.0.1:8000/api-cafe/logout", {
+      await fetch("http://localhost/api-cafe/logout", {
         method: "GET",
         headers: {
           "Content-type": "application/json",
@@ -55,7 +55,7 @@ export default new Vuex.Store({
       context.commit("clearToken")
     },
     async GetUsers() {
-      const users = await fetch("http://127.0.0.1:8000/api-cafe/user", {
+      const users = await fetch("http://localhost/api-cafe/user", {
         method: "GET",
         headers: {
           "Content-type": "application/json",
@@ -66,7 +66,7 @@ export default new Vuex.Store({
       return users.data;
     },
     async GetUser(context, id) {
-      const user = await fetch(`http://127.0.0.1:8000/api-cafe/user/${id}`, {
+      const user = await fetch(`http://localhost/api-cafe/user/${id}`, {
         method: "GET",
         headers: {
           "Content-type": "application/json",
@@ -81,7 +81,7 @@ export default new Vuex.Store({
       for (let i in body) {
         formData.append(i, body[i]);
       }
-      const user = await fetch(`http://127.0.0.1:8000/api-cafe/user`, {
+      const user = await fetch(`http://localhost/api-cafe/user`, {
         method: "POST",
         headers: {
           "Authorization": `Bearer ${this.getters.getToken}`
@@ -94,7 +94,7 @@ export default new Vuex.Store({
       return user;
     },
     async dismiss(context, id) {
-      const user = await fetch(`http://127.0.0.1:8000/api-cafe/user/${id}/to-dismiss`, {
+      const user = await fetch(`http://localhost/api-cafe/user/${id}/to-dismiss`, {
         method: "get",
         headers: {
           "Authorization": `Bearer ${this.getters.getToken}`
@@ -105,7 +105,7 @@ export default new Vuex.Store({
       return user;
     },
     async GetWorkShifts() {
-      const workShifts = await fetch("http://127.0.0.1:8000/api-cafe/work-shift", {
+      const workShifts = await fetch("http://localhost/api-cafe/work-shift", {
         method: "GET",
         headers: {
           "Content-type": "application/json",
@@ -116,7 +116,7 @@ export default new Vuex.Store({
       return workShifts;
     },
     async GetWokrerOnShift(context, id) {
-      const workShifts = await fetch(`http://127.0.0.1:8000/api-cafe/work-shift/${id}`, {
+      const workShifts = await fetch(`http://localhost/api-cafe/work-shift/${id}`, {
         method: "GET",
         headers: {
           "Content-type": "application/json",
@@ -128,7 +128,7 @@ export default new Vuex.Store({
       return workShifts;
     },
     async GetOrders(context, id) {
-      const orders = await fetch(`http://127.0.0.1:8000/api-cafe/work-shift/${id}/order`, {
+      const orders = await fetch(`http://localhost/api-cafe/work-shift/${id}/order`, {
         method: "GET",
         headers: {
           "Content-type": "application/json",
@@ -146,7 +146,7 @@ export default new Vuex.Store({
       return { token: getters.getToken, role: getters.getRole }
     },
     async OpenShift(context, id) {
-      const shift = await fetch(`http://127.0.0.1:8000/api-cafe/work-shift/${id}/open`, {
+      const shift = await fetch(`http://localhost/api-cafe/work-shift/${id}/open`, {
         method: "GET",
         headers: {
           "Authorization": `Bearer ${this.getters.getToken}`
@@ -158,7 +158,7 @@ export default new Vuex.Store({
       return shift;
     },
     async CloseShift(context, id) {
-      const shift = await fetch(`http://127.0.0.1:8000/api-cafe/work-shift/${id}}/close`, {
+      const shift = await fetch(`http://localhost/api-cafe/work-shift/${id}}/close`, {
         method: "GET",
         headers: {
           "Authorization": `Bearer ${this.getters.getToken}`
@@ -170,7 +170,7 @@ export default new Vuex.Store({
       return shift;
     },
     async addUserToShift(context, body) {
-      const shift = await fetch(`http://127.0.0.1:8000/api-cafe/work-shift/${body.id}/user`, {
+      const shift = await fetch(`http://localhost/api-cafe/work-shift/${body.id}/user`, {
         method: "POST",
         headers: {
           "Content-type": "application/json",
@@ -184,7 +184,7 @@ export default new Vuex.Store({
       return shift;
     },
     async delUserToShift(context, body) {
-      const shift = await fetch(`http://127.0.0.1:8000/api-cafe/work-shift/${body.id}/user/${body.user_id}`, {
+      const shift = await fetch(`http://localhost/api-cafe/work-shift/${body.id}/user/${body.user_id}`, {
         method: "DELETE",
         headers: {
           "Authorization": `Bearer ${this.getters.getToken}`
@@ -196,7 +196,7 @@ export default new Vuex.Store({
       return shift;
     },
     async CreateWorkShift(context, body) {
-      const shift = await fetch(`http://127.0.0.1:8000/api-cafe/work-shift`, {
+      const shift = await fetch(`http://localhost/api-cafe/work-shift`, {
         method: "POST",
         headers: {
           "Content-type": "application/json",
@@ -209,9 +209,75 @@ export default new Vuex.Store({
         .catch(e => console.log(e))
       return shift;
     },
+    async WaiterGetOrders(context, id) {
+      const shift = await fetch(`http://localhost/api-cafe/work-shift/${id}/order`, {
+        method: "GET",
+        headers: {
+          "Authorization": `Bearer ${this.getters.getToken}`
+        },
+      })
+        .then(res => res.json())
+        .then(res => res.error ? context.commit("setError", res.error) : res)
+        .catch(e => console.log(e))
+      return shift;
+    },
     async getRole(context) {
       if (await context.dispatch('GetUsers')) return context.commit("setRole", "admin")
-    }
+      const res = await context.dispatch('WaiterGetOrders', 1)
+      if (res.data || res.error.message == "Forbidden. You didn't work this shift!") return context.commit("setRole", "waiter")
+      return context.commit("setRole", "cook")
+    },
+    async active(context) {
+      const res = await fetch(`http://localhost/api-cafe/work-shift/active/get`, {
+        method: "GET",
+        headers: {
+          "Authorization": `Bearer ${this.getters.getToken}`
+        },
+      })
+        .then(res => res.json())
+        .then(res => res.error ? context.commit("setError", res.error) : res)
+        .catch(e => console.log(e))
+      return res
+    },
+    async changeStatus(context, body) {
+      const res = await fetch(`http://localhost/api-cafe/order/${body.id}/change-status`, {
+        method: "PATCH",
+        headers: {
+          "Authorization": `Bearer ${this.getters.getToken}`,
+          "Content-type": "application/json",
+        },
+        body: JSON.stringify({ status: body.status })
+      })
+        .then(res => res.json())
+        .then(res => res.error ? context.commit("setError", res.error) : res)
+        .catch(e => console.log(e))
+      return res
+    },
+    async getOrder(context, id) {
+      const res = await fetch(`http://localhost/api-cafe/order/${id}`, {
+        method: "GET",
+        headers: {
+          "Authorization": `Bearer ${this.getters.getToken}`,
+        },
+      })
+        .then(res => res.json())
+        .then(res => res.error ? context.commit("setError", res.error) : res)
+        .catch(e => console.log(e))
+      return res
+    },
+    async delPosition(context, body) {
+      const res = await fetch(`http://localhost/api-cafe/order/${body.order_id}/position/${body.position_id}`, {
+        method: "DELETE",
+        headers: {
+          "Authorization": `Bearer ${this.getters.getToken}`,
+        },
+      })
+        .then(res => res.json())
+        .then(res => res.error ? context.commit("setError", res.error) : res)
+        .catch(e => console.log(e))
+
+      return res
+    },
   },
   modules: {},
 })

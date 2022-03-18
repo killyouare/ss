@@ -1,10 +1,12 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
-import WorkersView from "../views/WorkersView.vue";
-import WorkerView from "../views/WorkerView.vue";
-import OrderView from "../views/OrderView.vue";
-import WorkShiftView from "../views/WorkShiftView.vue";
-import WorkerOnShift from "../views/WorkerOnShift.vue";
+import WorkersView from "../views/WorkersView";
+import WorkerView from "../views/WorkerView";
+import OrderView from "../views/OrderView";
+import WorkShiftView from "../views/WorkShiftView";
+import WorkerOnShift from "../views/WorkerOnShift";
+import Order from "../views/OrdersView";
+import DetailOrder from "../views/DetailOrderView";
 
 Vue.use(VueRouter);
 
@@ -33,6 +35,16 @@ const routes = [
     path: "/shifts/:id/workers",
     name: "WorkerOnShift",
     component: WorkerOnShift,
+  },
+  {
+    path: "/orders",
+    name: "OrdersWaiter",
+    component: Order,
+  },
+  {
+    path: "/order/:id",
+    name: "OneOrder",
+    component: DetailOrder,
   },
 ];
 

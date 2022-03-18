@@ -48,7 +48,7 @@ import Error from "./ErrorComponent";
 
 export default {
   data: () => ({
-    body: { login: "", name: "", password: "", role_id: "" },
+    body: { login: "", name: "", password: "", role_id: "nothing" },
     roles: ["Администратор", "Официант", "Повар"],
     errors: false,
   }),
@@ -60,6 +60,7 @@ export default {
       const message = await this.$store.dispatch("CreateUser", this.body);
       if (message) {
         this.$emit("add", {
+          id: message.data.id,
           login: this.body.login,
           group: this.roles[this.body.role_id - 1],
           name: this.body.name,

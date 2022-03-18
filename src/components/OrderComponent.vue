@@ -5,12 +5,21 @@
     <p>Официант: {{ shift_workers }}</p>
     <p>Статус: {{ statused }}</p>
     <p>Цена: {{ price }}</p>
-    <label for="status">Статус</label>
+    <label
+      v-if="
+        (userRole == 'waiter' &&
+          (statused == 'Принят' || statused == 'Готов')) ||
+        (userRole == 'cook' &&
+          (statused == 'Принят' || statused == 'Готовится'))
+      "
+      for="status"
+      >Статус</label
+    >
     <select
       v-if="
         (userRole == 'waiter' &&
           (statused == 'Принят' || statused == 'Готов')) ||
-        (userRole == 'cock' &&
+        (userRole == 'cook' &&
           (statused == 'Принят' || statused == 'Готовится'))
       "
       @change="change"
@@ -45,9 +54,17 @@
       </option>
     </select>
     <router-link
+      v-if="addOptions"
       class="approve_button"
       :to="{ name: 'OneOrder', params: { id: id } }"
       >Подробнее</router-link
+    >
+    <a
+      v-if="addOrder && (status == 'Принят') | (status == 'Готовится')"
+      class="approve_button"
+      @click.prevent="$emit('open')"
+      href="#"
+      >Добавить заказ</a
     >
   </article>
 </template>
@@ -56,7 +73,15 @@
 import Error from "./ErrorComponent";
 export default {
   name: "OrderComponent",
-  props: ["id", "table", "price", "status", "shift_workers", "userRole"],
+  props: [
+    "id",
+    "table",
+    "price",
+    "status",
+    "shift_workers",
+    "addOptions",
+    "addOrder",
+  ],
   data() {
     return {
       statused: this.status,
@@ -66,6 +91,7 @@ export default {
         "paid-up": "Оплачен",
         canceled: "Отменен",
       },
+      userRole: this.$store.getters.getRole,
       errors: false,
       body: { id: this.id, status: "nothing" },
     };

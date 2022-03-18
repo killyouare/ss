@@ -2,11 +2,14 @@
   <section class="orders">
     <Order
       :id="orders.id"
-      :position="orders.shift_workers"
+      :table="orders.table"
+      :shift_workers="orders.shift_workers"
       :price="orders.price_all"
-      :count="orders.status"
+      :status="orders.status"
+      :addOrder="true"
+      @open="openModal"
     />
-    <Order
+    <Table
       v-for="order in orders.positions"
       :key="order.id"
       :id="order.id"
@@ -17,21 +20,24 @@
       :status="orders.status"
       @del="del"
     />
+    <Modal v-if="modal" @open="openModal" @add="add" />
   </section>
 </template>
 
 
 <script>
-import Order from "../components/DetailOrdersComponent";
+import Table from "../components/DetailOrdersComponent";
+import Order from "../components/OrderComponent";
+import Modal from "../components/CreatePositionComponent";
 export default {
   data() {
     return {
       orders: [],
-      openModal: false,
+      modal: false,
       error: false,
     };
   },
-  components: { Order },
+  components: { Table, Order, Modal },
   methods: {
     del(id) {
       const positions = this.orders.positions;
@@ -44,12 +50,18 @@ export default {
         1
       );
     },
+    add(orders) {
+      this.orders = orders;
+    },
+    openModal() {
+      this.modal = !this.modal;
+    },
   },
   async mounted() {
     this.orders = (
       await this.$store.dispatch("getOrder", this.$route.params.id)
     ).data;
-    console.log(this.orders);
+    console.log(this.orders.status);
   },
 };
 </script>

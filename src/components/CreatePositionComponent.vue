@@ -2,22 +2,22 @@
   <article class="modal">
     <Error v-if="errors" />
     <form @submit.prevent>
-      <h2>Добавление заказа</h2>
+      <h2>Добавление позиции</h2>
       <div>
-        <label for="table_id">Номер столика</label>
-        <input
-          v-model="body.table_id"
-          type="number"
-          name="password"
-          id="table_id"
-        />
+        <label for="menu_id">Номер товара из меню</label>
+        <select v-model="body.menu_id" id="menu_id">
+          <option v-for="menu in menus" :key="menu.id" :value="menu.id">
+            {{ menu.name }} - {{ menu.price }}
+          </option>
+        </select>
       </div>
       <div>
-        <label for="number_of_person">Количество персон</label>
+        <label for="number_of_person">Количество</label>
         <input
-          v-model="body.number_of_person"
+          v-model="body.count"
           type="number"
-          name="password"
+          min="1"
+          max="10"
           id="number_of_person"
         />
       </div>
@@ -37,10 +37,10 @@ export default {
   data() {
     return {
       body: {
-        work_shift_id: this.id,
-        table_id: "",
-        number_of_person: "",
+        menu_id: "",
+        count: "",
       },
+      menus: [],
       errors: false,
     };
   },
@@ -48,20 +48,18 @@ export default {
   methods: {
     async add() {
       this.errors = false;
-      const message = (await this.$store.dispatch("createOrder", this.body))
+      const message = (await this.$store.dispatch("createPosition", this.body))
         .data;
       if (message) {
-        this.$emit("add", {
-          id: message.id,
-          table: message.table,
-          shift_workers: message.shift_workers,
-          status: message.status,
-          price: message.price,
-        });
+        this.$emit("add", message);
         return this.$emit("open");
       }
       this.errors = true;
     },
+  },
+  async mounted() {
+    this.menus = await this.$store.dispatch("getMenu");
+    this.body.id = this.$route.params.id;
   },
   destroy() {
     this.body = null;

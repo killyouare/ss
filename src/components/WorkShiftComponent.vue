@@ -8,12 +8,14 @@
       Статус: {{ activese ? "Открыта" : "Закрыта" }}
     </p>
     <a
+      v-if="admin"
       :class="activese ? 'cancel_button' : 'approve_button'"
       @click.prevent="activese ? close() : open()"
       href="#"
       >{{ activese ? "Закрыть" : "Открыть" }}</a
     >
     <router-link
+      v-if="admin"
       class="approve_button"
       :to="{ name: 'orders', params: { id: id } }"
       >Управление</router-link
@@ -25,7 +27,7 @@
 import Error from "./ErrorComponent";
 export default {
   name: "WorkShiftComponent",
-  props: ["id", "start", "end", "active"],
+  props: ["id", "start", "end", "active", "admin"],
   components: { Error },
   data() {
     return {

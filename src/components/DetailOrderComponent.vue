@@ -6,12 +6,15 @@
     <p :class="active ? 'working' : 'fired'">
       Статус: {{ active ? "Открыта" : "Закрыта" }}
     </p>
+    <a class="approve_button" v-if="order" @click.prevent="$emit('open')"
+      >Добавить смену</a
+    >
   </article>
 </template>
 
 <script>
 export default {
   name: "WorkShiftComponent",
-  props: ["id", "start", "end", "active"],
+  props: ["id", "start", "end", "active", "order"],
 };
 </script>

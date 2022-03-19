@@ -28,10 +28,23 @@ export default new Vuex.Store({
       state.token = ""
     },
     clearRole(state) {
-      state.token = ""
+      state.role = ""
     }
   },
   actions: {
+    async f(context, { url, method, body = {}, token = true, formdata = false }) {
+      method = method.toUpperCase();
+      const options = {
+        method,
+        headers: {},
+      };
+      if (formdata) {
+        options.headers['Content-type'] = "multipart/form-data"
+      } else {
+        options.headers['Content-type'] = "application/json"
+      }
+      console.log(url, body, token)
+    },
     async Login(context, body) {
       await fetch("http://127.0.0.1:8000/api-cafe/login", {
         method: "POST",

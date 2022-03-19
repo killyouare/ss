@@ -39,6 +39,7 @@ export default {
       if (token) {
         this.$emit("open");
         const role = this.$store.getters.getRole;
+        console.log(role);
         if (role == "admin") return this.$router.push("/workers");
         return this.$router.push("/orders");
       }

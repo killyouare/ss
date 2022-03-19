@@ -1,7 +1,7 @@
 <template>
   <div id="app">
-    <HeaderComponent @open="OpenModal" />
     <Modal v-if="openModal" @open="OpenModal" />
+    <HeaderComponent @open="OpenModal" />
 
     <main>
       <router-view />

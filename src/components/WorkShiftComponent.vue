@@ -8,14 +8,14 @@
       Статус: {{ activese ? "Открыта" : "Закрыта" }}
     </p>
     <a
-      v-if="admin"
+      v-if="userRole == 'admin'"
       :class="activese ? 'cancel_button' : 'approve_button'"
       @click.prevent="activese ? close() : open()"
       href="#"
       >{{ activese ? "Закрыть" : "Открыть" }}</a
     >
     <router-link
-      v-if="admin"
+      v-if="userRole == 'admin'"
       class="approve_button"
       :to="{ name: 'orders', params: { id: id } }"
       >Управление</router-link
@@ -27,12 +27,13 @@
 import Error from "./ErrorComponent";
 export default {
   name: "WorkShiftComponent",
-  props: ["id", "start", "end", "active", "admin"],
+  props: ["id", "start", "end", "active"],
   components: { Error },
   data() {
     return {
       errors: false,
       activese: this.active,
+      userRole: "",
     };
   },
   methods: {
@@ -57,6 +58,9 @@ export default {
         this.errors = false;
       }, timer);
     },
+  },
+  async mounted() {
+    this.userRole = this.$store.getters.getRole;
   },
 };
 </script>

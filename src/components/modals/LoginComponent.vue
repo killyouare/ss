@@ -25,22 +25,27 @@ export default {
     body: {},
   }),
   methods: {
-    ...mapMutations(["clearModal", "setToken", "clearData"]),
+    ...mapMutations(["clearModal", "setToken"]),
     ...mapActions(["getUserRole", "f"]),
-    ...mapGetters(["getUserData"]),
+    ...mapGetters(["getData"]),
     async authenticate() {
-      this.f({
+      await this.f({
         path: "login",
         method: "post",
         data: this.body,
         useToken: false,
       });
-      const data = this.getData();
-      if (data) {
-        this.setToken(data.data.user_token);
+      console.log(this.data());
+      if (this.data()) {
+        this.setToken(this.data().data.user_token);
         this.getUserRole();
         return this.clearModal();
       }
+    },
+  },
+  computed: {
+    data() {
+      return this.getData;
     },
   },
   destroyed() {

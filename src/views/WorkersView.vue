@@ -18,21 +18,22 @@
 </template>
 
 <script>
-import { mapMutations } from "vuex";
+import { mapMutations, mapGetters } from "vuex";
 
 import User from "../components/WorkerComponent";
 export default {
-  data() {
-    return {
-      users: [],
-    };
-  },
   components: { User },
   async mounted() {
-    this.users = await this.$store.dispatch("GetUsers");
+    await this.$store.dispatch("GetUsers");
   },
   methods: {
     ...mapMutations(["setModal"]),
+    ...mapGetters(["getData"]),
+  },
+  computed: {
+    users() {
+      return this.getData.data;
+    },
   },
 };
 </script>

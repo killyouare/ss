@@ -47,21 +47,25 @@ export default {
   }),
   methods: {
     ...mapGetters(["getData"]),
-    ...mapMutations(["setData"]),
+    ...mapMutations(["setData", "clearModal"]),
     ...mapActions(["f"]),
     async create() {
       const photo = document.querySelector('input[type="file"]').files[0];
       if (photo) this.body.photo_file = photo;
-      await this.f({
-        path: "",
+      this.f({
+        path: "user",
         method: "post",
         data: this.body,
-        formdata: true,
+        form: true,
       });
-      const data = this.getData;
-      if (data) {
-        console.log(data);
+      if (this.data()) {
+        this.clearModal();
       }
+    },
+  },
+  computed: {
+    data() {
+      return this.getData;
     },
   },
   destroyed() {

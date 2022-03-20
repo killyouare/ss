@@ -34,8 +34,7 @@ export default {
   methods: {
     ...mapMutations({
       modal: "setModal",
-      clearToken: "clearToken",
-      clearRole: "clearRole",
+      clearUser: "clearUser",
     }),
     ...mapActions(["f"]),
     ...mapGetters([]),
@@ -43,8 +42,8 @@ export default {
       await this.f({
         path: "logout",
       });
-      this.clearToken();
-      this.clearRole();
+      localStorage.clear();
+      this.clearUser();
       this.$router.push({ name: "Home" }).catch((err) => err);
     },
   },

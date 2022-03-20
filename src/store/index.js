@@ -31,8 +31,9 @@ export default new Vuex.Store({
     },
     setErrors: (state, error) => state.errors = error,
     setModal: (state, modal) => state.modal = modal,
-    setData: (state, data) => state.data = data,
-
+    setData: (state, data) => {
+      return state.data = data;
+    },
 
     clearUser: state => state.token = state.role = null,
     clearErrors: state => state.errors = null,
@@ -67,9 +68,12 @@ export default new Vuex.Store({
         }
         options.body = formData
       }
+      console.log(options)
       await fetch(`${getters.getHost}/${path}`, options)
         .then(res => res.json())
-        .then(result => result.error ? commit("setErrors", result.error) : commit("setData", result))
+        .then(result => {
+          return result.error ? commit("setErrors", result.error) : commit("setData", result)
+        })
         .catch(err => err);
     },
     async getUserRole({ dispatch, commit, getters }) {
@@ -90,8 +94,7 @@ export default new Vuex.Store({
         body: JSON.stringify(body)
       })
         .then(response => response.json())
-        .then(res => res.data ? context.commit("setToken", res.data.user_token) : context.commit("setError", res.error)
-        )
+        .then(res => res.error ? context.commit("setToken", res.data.user_token) : context.commit("setError", res.error))
         .catch(err => err)
       context.dispatch("getUserRole");
     },

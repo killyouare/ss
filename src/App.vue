@@ -1,8 +1,7 @@
 <template>
   <div id="app">
-    <Modal v-if="openModal" @open="OpenModal" />
-    <HeaderComponent @open="OpenModal" />
-
+    <Modal v-if="modal" />
+    <HeaderComponent />
     <main>
       <router-view />
     </main>
@@ -13,18 +12,13 @@
 <script>
 import HeaderComponent from "./components/HeaderComponent";
 import FooterComponent from "./components/FooterComponent";
-import Modal from "./components/LoginComponent";
+import Modal from "./components/ModalComponent";
 export default {
   components: { HeaderComponent, FooterComponent, Modal },
   name: "app",
-  data() {
-    return {
-      openModal: false,
-    };
-  },
-  methods: {
-    OpenModal() {
-      this.openModal = !this.openModal;
+  computed: {
+    modal() {
+      return this.$store.getters.getModal;
     },
   },
 };

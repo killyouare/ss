@@ -1,6 +1,5 @@
 <template>
   <article>
-    <Error v-if="errors" />
     <h2>{{ table }}</h2>
     <p>Официант: {{ shift_workers }}</p>
     <p>Статус: {{ statused }}</p>
@@ -70,7 +69,6 @@
 </template>
 
 <script>
-import Error from "./ErrorComponent";
 export default {
   name: "OrderComponent",
   props: [
@@ -96,7 +94,6 @@ export default {
       body: { id: this.id, status: "nothing" },
     };
   },
-  components: { Error },
   methods: {
     async change() {
       const message = await this.$store.dispatch("changeStatus", this.body);

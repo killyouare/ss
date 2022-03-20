@@ -4,46 +4,82 @@ import Vuex from "vuex";
 Vue.use(Vuex);
 
 export default new Vuex.Store({
-  state: { token: "", error: new Map(), role: "" },
+  state: {
+    token: null,
+    errors: null,
+    data: null,
+    role: null,
+    modal: null,
+    host: process.env.HOST || "http://127.0.0.1:8000/api-cafe"
+  },
   getters: {
     getToken: (state) => state.token,
     getRole: (state) => state.role,
-    getErrors: (state) => state.error,
+    getErrors: (state) => state.errors,
+    getModal: (state) => state.modal,
+    getData: (state) => state.data,
+    getHost: (state) => state.host,
   },
   mutations: {
-    setToken(state, token) {
+    setToken: (state, token) => {
       localStorage.setItem('userToken', token)
-      state.token = token;
+      state.token = token
     },
-    setRole(state, role) {
+    setRole: (state, role) => {
       localStorage.setItem('userRole', role)
       state.role = role;
     },
-    setError(state, error) {
-      for (let i in error) {
-        state.error.set(i, error[i]);
-      }
-    },
-    clearToken(state) {
-      state.token = ""
-    },
-    clearRole(state) {
-      state.role = ""
-    }
+    setErrors: (state, error) => state.errors = error,
+    setModal: (state, modal) => state.modal = modal,
+    setData: (state, data) => state.data = data,
+
+
+    clearUser: state => state.token = state.role = null,
+    clearErrors: state => state.errors = null,
+    clearModal: state => state.modal = null,
+    clearData: state => state.data = null,
+
   },
   actions: {
-    async f(context, { url, method, body = {}, token = true, formdata = false }) {
+    test() {
+      console.log(process.env.HOST);
+    },
+    async f({ getters, commit }, { path, method = 'get', data = [], useToken = true, form = false }) {
+      commit("clearData");
+      commit("clearErrors");
       method = method.toUpperCase();
-      const options = {
-        method,
+      let options = {
+        method: method,
         headers: {},
-      };
-      if (formdata) {
-        options.headers['Content-type'] = "multipart/form-data"
-      } else {
-        options.headers['Content-type'] = "application/json"
       }
-      console.log(url, body, token)
+      if (useToken) {
+        options.headers['Authorization'] = `Bearer ${getters.getToken}`;
+      }
+      if (!form) {
+        options.headers['Content-Type'] = 'application/json';
+        if (["POST", "PATCH"].includes(method)) {
+          options.body = JSON.stringify(data)
+        }
+      } else {
+        let formData = new FormData();
+        for (let name in data) {
+          formData.append(name, data[name])
+        }
+        options.body = formData
+      }
+      await fetch(`${getters.getHost}/${path}`, options)
+        .then(res => res.json())
+        .then(result => result.error ? commit("setErrors", result.error) : commit("setData", result))
+        .catch(err => err);
+    },
+    async getUserRole({ dispatch, commit, getters }) {
+      await dispatch('f', { path: "user" });
+      if (getters.getData) return commit("setRole", "admin")
+      await dispatch('f', {
+        path: "work-shift/1/order"
+      })
+      if (getters.getData || getters.getErrors.message != "Forbidden for you") return commit("setRole", "waiter")
+      return commit("setRole", "cook")
     },
     async Login(context, body) {
       await fetch("http://127.0.0.1:8000/api-cafe/login", {
@@ -68,8 +104,7 @@ export default new Vuex.Store({
         },
       })
       localStorage.clear()
-      context.commit("clearToken")
-      context.commit("clearRole")
+      context.commit("clearUser")
     },
     async GetUsers() {
       const users = await fetch("http://127.0.0.1:8000/api-cafe/user", {
@@ -101,7 +136,7 @@ export default new Vuex.Store({
       const user = await fetch(`http://127.0.0.1:8000/api-cafe/user`, {
         method: "POST",
         headers: {
-          "Authorization": `Bearer ${this.getters.getToken}`
+          "Authorization": `Bearer ${context.getters.getToken}`
         },
         body: formData
       })
@@ -265,13 +300,7 @@ export default new Vuex.Store({
         .catch(e => console.log(e))
       return shift;
     },
-    async getUserRole(context) {
-      if (await context.dispatch('GetUsers')) return context.commit("setRole", "admin")
-      const res = await context.dispatch('WaiterGetOrders', 1)
-      console.log(res);
-      if (res.data || res.error.message == "Forbidden. You didn't work this shift!") return context.commit("setRole", "waiter")
-      return context.commit("setRole", "cook")
-    },
+
     async active(context) {
       const res = await fetch(`http://127.0.0.1:8000/api-cafe/work-shift/active/get`, {
         method: "GET",

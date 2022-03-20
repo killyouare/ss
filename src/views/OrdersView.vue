@@ -19,22 +19,14 @@
       :userRole="userRole"
       :addOptions="userRole == 'waiter'"
     />
-    <Modal
-      v-if="modal"
-      :id="orders.id"
-      :users="users"
-      @add="add"
-      @open="openModal"
-    />
   </section>
 </template>
 
 <script>
 import Order from "../components/OrderComponent";
 import WorkShift from "../components/DetailOrderComponent";
-import Modal from "../components/CreateOrderComponent";
 export default {
-  components: { Order, WorkShift, Modal },
+  components: { Order, WorkShift },
   data() {
     return {
       orders: [],

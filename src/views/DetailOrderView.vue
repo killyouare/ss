@@ -20,7 +20,6 @@
       :status="orders.status"
       @del="del"
     />
-    <Modal v-if="modal" @open="openModal" @add="add" />
   </section>
 </template>
 
@@ -28,7 +27,6 @@
 <script>
 import Table from "../components/DetailOrdersComponent";
 import Order from "../components/OrderComponent";
-import Modal from "../components/CreatePositionComponent";
 export default {
   data() {
     return {
@@ -37,7 +35,7 @@ export default {
       error: false,
     };
   },
-  components: { Table, Order, Modal },
+  components: { Table, Order },
   methods: {
     del(id) {
       const positions = this.orders.positions;

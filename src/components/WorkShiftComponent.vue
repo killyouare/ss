@@ -8,14 +8,14 @@
       Статус: {{ activese ? "Открыта" : "Закрыта" }}
     </p>
     <a
-      v-if="userRole == 'admin'"
+      v-if="role == 'admin'"
       :class="activese ? 'cancel_button' : 'approve_button'"
       @click.prevent="activese ? close() : open()"
       href="#"
       >{{ activese ? "Закрыть" : "Открыть" }}</a
     >
     <router-link
-      v-if="userRole == 'admin'"
+      v-if="role == 'admin'"
       class="approve_button"
       :to="{ name: 'orders', params: { id: id } }"
       >Управление</router-link
@@ -24,43 +24,38 @@
 </template>
 
 <script>
-import Error from "./ErrorComponent";
+import Error from "./modals/ErrorComponent";
 export default {
   name: "WorkShiftComponent",
   props: ["id", "start", "end", "active"],
   components: { Error },
   data() {
     return {
-      errors: false,
       activese: this.active,
-      userRole: "",
     };
   },
   methods: {
     async open() {
-      this.errors = false;
       const res = await this.$store.dispatch("OpenShift", this.id);
       if (res) {
         return (this.activese = !this.activese);
       }
-      return this.timeOut(2000);
     },
     async close() {
       const res = await this.$store.dispatch("CloseShift", this.id);
       if (res) {
         return (this.activese = !this.activese);
       }
-      return this.timeOut(2000);
-    },
-    timeOut(timer) {
-      this.errors = true;
-      setTimeout(() => {
-        this.errors = false;
-      }, timer);
     },
   },
-  async mounted() {
-    this.userRole = this.$store.getters.getRole;
+  computed: {
+    role() {
+      return this.$store.getters.getRole;
+    },
+    token() {
+      return this.$store.getters.getToken;
+    },
+    errors: () => this.$store.getters.getError,
   },
 };
 </script>

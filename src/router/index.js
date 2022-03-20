@@ -7,6 +7,7 @@ import WorkShiftView from "../views/WorkShiftView";
 import WorkerOnShift from "../views/WorkerOnShift";
 import Order from "../views/OrdersView";
 import DetailOrder from "../views/DetailOrderView";
+import Home from "../views/HomeView";
 
 Vue.use(VueRouter);
 
@@ -45,6 +46,11 @@ const routes = [
     path: "/order/:id",
     name: "OneOrder",
     component: DetailOrder,
+  },
+  {
+    path: "/",
+    name: "Home",
+    component: Home,
   },
 ];
 

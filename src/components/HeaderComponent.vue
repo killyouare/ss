@@ -6,7 +6,7 @@
     <nav>
       <a
         v-if="!token"
-        @click.prevent="$emit('open')"
+        @click.prevent="modal('login')"
         href="#"
         class="approve_button"
       >
@@ -25,13 +25,27 @@
 </template>
 
 <script>
+import { mapMutations } from "vuex";
+import { mapActions } from "vuex";
+import { mapGetters } from "vuex";
+
 export default {
   name: "NavigationComponent",
   methods: {
+    ...mapMutations({
+      modal: "setModal",
+      clearToken: "clearToken",
+      clearRole: "clearRole",
+    }),
+    ...mapActions(["f"]),
+    ...mapGetters([]),
     async logout() {
-      await this.$store.dispatch("Logout");
-      this.$emit("clear");
-      this.$router.push("/");
+      await this.f({
+        path: "logout",
+      });
+      this.clearToken();
+      this.clearRole();
+      this.$router.push({ name: "Home" }).catch((err) => err);
     },
   },
   async mounted() {

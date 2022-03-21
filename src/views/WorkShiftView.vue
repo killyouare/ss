@@ -2,7 +2,7 @@
   <section class="shift">
     <a @click.prevent="OpenModal" class="approve_button">Добавить смену</a>
     <WorkShift
-      v-for="workShift in workShifts"
+      v-for="workShift in getData.data"
       :key="workShift.id"
       :id="workShift.id"
       :start="workShift.start"
@@ -13,21 +13,20 @@
 </template>
 
 <script>
+import { mapGetters, mapActions } from "vuex";
 import WorkShift from "../components/WorkShiftComponent";
 export default {
-  data() {
-    return {
-      workShifts: [],
-    };
-  },
   components: { WorkShift },
   methods: {
-    add(body) {
-      this.workShifts.push(body);
-    },
+    ...mapActions(["f"]),
   },
-  async mounted() {
-    this.workShifts = await this.$store.dispatch("GetWorkShifts");
+  computed: {
+    ...mapGetters(["getData"]),
+  },
+  mounted() {
+    this.f({
+      path: "work-shift",
+    });
   },
 };
 </script>

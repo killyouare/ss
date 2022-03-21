@@ -68,10 +68,10 @@ export default new Vuex.Store({
         }
         options.body = formData
       }
-      console.log(options)
       await fetch(`${getters.getHost}/${path}`, options)
         .then(res => res.json())
         .then(result => {
+          console.log(result);
           return result.error ? commit("setErrors", result.error) : commit("setData", result)
         })
         .catch(err => err);
@@ -121,7 +121,7 @@ export default new Vuex.Store({
       return users.data;
     },
     async GetUser(context, id) {
-      const user = await fetch(`http://127.0.0.1:8000/api-cafe/user/${id}`, {
+      const user = await fetch(`http://127.0.0.1:8000/api-cafe/${id}`, {
         method: "GET",
         headers: {
           "Content-type": "application/json",
@@ -131,23 +131,7 @@ export default new Vuex.Store({
         .then(res => res.json()).catch(e => console.log(e))
       return user.data;
     },
-    async CreateUser(context, body) {
-      let formData = new FormData();
-      for (let i in body) {
-        formData.append(i, body[i]);
-      }
-      const user = await fetch(`http://127.0.0.1:8000/api-cafe/user`, {
-        method: "POST",
-        headers: {
-          "Authorization": `Bearer ${context.getters.getToken}`
-        },
-        body: formData
-      })
-        .then(res => res.json())
-        .then(res => res.data ? res : context.commit("setError", res.error))
-        .catch(e => console.log(e))
-      return user;
-    },
+
     async dismiss(context, id) {
       const user = await fetch(`http://127.0.0.1:8000/api-cafe/user/${id}/to-dismiss`, {
         method: "get",

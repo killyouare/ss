@@ -6,39 +6,37 @@
       <span>Должность</span>
     </article>
     <User
-      :id="user.id"
+      :id="getData.data.id"
       :name="
-        user.surname
-          ? user.patronymic
-            ? `${user.surname} ${user.name} ${user.patronymic}`
-            : `${user.surname} ${user.name}`
-          : user.name
+        getData.data.surname
+          ? getData.data.patronymic
+            ? `${getData.data.surname} ${getData.data.name} ${getData.data.patronymic}`
+            : `${getData.data.surname} ${getData.data.name}`
+          : getData.data.name
       "
-      :group="user.group"
-      :status="user.status"
-      @dismiss="dismiss"
+      :group="getData.data.group"
+      :status="getData.data.status"
+      :dismiss="true"
     />
   </section>
 </template>
 
 <script>
-import User from "../components/DetailUserComponent";
+import User from "../components/WorkerComponent";
+import { mapActions, mapGetters } from "vuex";
 export default {
-  data() {
-    return {
-      user: [],
-    };
-  },
   components: { User },
 
-  async mounted() {
-    this.user = await this.$store.dispatch("GetUser", this.$route.params.id);
+  mounted() {
+    this.f({
+      path: `user/${this.$route.params.id}`,
+    });
   },
   methods: {
-    dismiss: async function () {
-      await this.$store.dispatch("dismiss", this.$route.params.id);
-      this.user.status = "fired";
-    },
+    ...mapActions(["f"]),
+  },
+  computed: {
+    ...mapGetters(["getData"]),
   },
 };
 </script>

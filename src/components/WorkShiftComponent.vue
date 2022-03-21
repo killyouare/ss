@@ -1,6 +1,6 @@
 <template>
   <article>
-    <Error v-if="errors" />
+    <Error v-if="getErrors" />
     <h2>Смена №{{ id }}</h2>
     <p>Начало смены в {{ start }}</p>
     <p>Конец смены в {{ end }}</p>
@@ -29,11 +29,6 @@ export default {
   name: "WorkShiftComponent",
   props: ["id", "start", "end", "active"],
   components: { Error },
-  data() {
-    return {
-      activese: this.active,
-    };
-  },
   methods: {
     async open() {
       const res = await this.$store.dispatch("OpenShift", this.id);
@@ -48,14 +43,6 @@ export default {
       }
     },
   },
-  computed: {
-    role() {
-      return this.$store.getters.getRole;
-    },
-    token() {
-      return this.$store.getters.getToken;
-    },
-    errors: () => this.$store.getters.getError,
-  },
+  computed: {},
 };
 </script>

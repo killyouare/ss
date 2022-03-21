@@ -27,7 +27,6 @@ export default {
   methods: {
     ...mapMutations(["clearModal", "setToken"]),
     ...mapActions(["getUserRole", "f"]),
-    ...mapGetters(["getData"]),
     async authenticate() {
       await this.f({
         path: "login",
@@ -35,18 +34,15 @@ export default {
         data: this.body,
         useToken: false,
       });
-      console.log(this.data());
-      if (this.data()) {
-        this.setToken(this.data().data.user_token);
+      if (this.getData) {
+        this.setToken(this.getData.data.user_token);
         this.getUserRole();
         return this.clearModal();
       }
     },
   },
   computed: {
-    data() {
-      return this.getData;
-    },
+    ...mapGetters(["getData"]),
   },
   destroyed() {
     this.body = null;

@@ -33,7 +33,7 @@
     </div>
     <div>
       <button @click.prevent="create" class="approve_button">Отправить</button>
-      <button @click="$emit('open')" class="cancel_button">Отмена</button>
+      <button @click="clearModal" class="cancel_button">Отмена</button>
     </div>
   </form>
 </template>
@@ -46,31 +46,29 @@ export default {
     roles: ["Администратор", "Официант", "Повар"],
   }),
   methods: {
-    ...mapGetters(["getData"]),
     ...mapMutations(["setData", "clearModal"]),
     ...mapActions(["f"]),
     async create() {
       const photo = document.querySelector('input[type="file"]').files[0];
       if (photo) this.body.photo_file = photo;
-      this.f({
+      await this.f({
         path: "user",
         method: "post",
         data: this.body,
         form: true,
       });
-      if (this.data()) {
-        this.clearModal();
+      if (this.getData) {
+        return this.clearModal();
       }
     },
   },
   computed: {
-    data() {
-      return this.getData;
-    },
+    ...mapGetters(["getData"]),
   },
   destroyed() {
     this.body = null;
     this.roles = null;
+    this.f({ path: "user" });
   },
 };
 </script>

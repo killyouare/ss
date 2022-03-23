@@ -6,7 +6,6 @@
       :end="orders.end"
       :active="orders.active"
       :order="true"
-      @open="openModal"
     />
     <Order
       v-for="order in orders.orders"

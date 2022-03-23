@@ -1,7 +1,6 @@
 <template>
   <section>
     <article class="modal">
-      <Error v-if="errors" />
       <Login v-if="modal == 'login'" />
       <Order v-if="modal == 'order'" />
       <Position v-if="modal == 'position'" />
@@ -12,8 +11,7 @@
 </template>
 
 <script>
-import { mapGetters } from "vuex";
-import Error from "./modals/ErrorComponent";
+import { mapState } from "vuex";
 import Login from "./modals/LoginComponent";
 import Order from "./modals/CreateOrderComponent";
 import Position from "./modals/CreatePositionComponent";
@@ -21,17 +19,9 @@ import Worker from "./modals/CreateWorkerComponent";
 import WorkShift from "./modals/CreateWorkShiftComponent";
 export default {
   name: "ModalComponent",
-  components: { Error, Login, Order, Position, Worker, WorkShift },
-  methods: {
-    ...mapGetters(["getModal", "getErrors"]),
-  },
+  components: { Login, Order, Position, Worker, WorkShift },
   computed: {
-    modal() {
-      return this.getModal();
-    },
-    errors() {
-      return this.getErrors();
-    },
+    ...mapState(["modal"]),
   },
 };
 </script>

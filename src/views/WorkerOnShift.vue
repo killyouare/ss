@@ -6,44 +6,46 @@
       <span>Должность</span>
     </article>
     <User
-      v-for="user in users"
+      v-for="user in users.filter((value) => {
+        if (value.status == 'working') return value;
+      })"
       :key="user.id"
       :id="user.id"
       :name="user.name"
       :group="user.group"
       :status="
-        workShift.users.findIndex((value) => {
-          if (value.id == user.id) {
-            return value;
-          }
+        getData.users.findIndex((value) => {
+          if (value.id == user.id) return value;
         }) == -1
           ? false
           : true
       "
+      :ws="true"
     />
   </section>
 </template>
 
 <script>
-import User from "../components/DetailWorkerOnShiftComponent";
+import { mapActions, mapGetters, mapState } from "vuex";
+import User from "../components/WorkerComponent";
 export default {
   data() {
     return {
       users: [],
-      workShift: [],
-      error: false,
     };
   },
   components: { User },
   async mounted() {
-    this.users = (await this.$store.dispatch("GetUsers")).filter((value) => {
-      if (value.status != "fired") {
-        return value;
-      }
-    });
-    this.workShift = (
-      await this.$store.dispatch("GetWokrerOnShift", this.$route.params.id)
-    ).data;
+    await this.f({ path: "user" });
+    this.users = this.getData;
+    await this.f({ path: `work-shift/${this.$route.params.id}` });
+  },
+  methods: {
+    ...mapActions(["f"]),
+  },
+  computed: {
+    ...mapState([""]),
+    ...mapGetters(["getData"]),
   },
 };
 </script>

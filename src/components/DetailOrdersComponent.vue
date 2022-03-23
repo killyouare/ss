@@ -9,7 +9,7 @@
       v-if="status == 'Принят'"
       class="cancel_button"
       @click.prevent="del"
-      href="#"
+      
       >Удалить</a
     >
   </article>

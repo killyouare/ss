@@ -13,12 +13,9 @@ export default new Vuex.Store({
     host: process.env.HOST || "http://127.0.0.1:8000/api-cafe"
   },
   getters: {
-    getToken: (state) => state.token,
-    getRole: (state) => state.role,
-    getErrors: (state) => state.errors,
-    getModal: (state) => state.modal,
-    getData: (state) => state.data,
-    getHost: (state) => state.host,
+    getData: (state) =>
+      state.data?.data
+    ,
   },
   mutations: {
     setToken: (state, token) => {
@@ -35,7 +32,10 @@ export default new Vuex.Store({
       return state.data = data;
     },
 
-    clearUser: state => state.token = state.role = null,
+    clearUser: state => {
+      localStorage.clear();
+      return state.token = state.role = null
+    },
     clearErrors: state => state.errors = null,
     clearModal: state => state.modal = null,
     clearData: state => state.data = null,
@@ -45,7 +45,7 @@ export default new Vuex.Store({
     test() {
       console.log(process.env.HOST);
     },
-    async f({ getters, commit }, { path, method = 'get', data = [], useToken = true, form = false }) {
+    async f({ commit, state }, { path, method = 'get', data = [], useToken = true, form = false }) {
       commit("clearData");
       commit("clearErrors");
       method = method.toUpperCase();
@@ -54,7 +54,7 @@ export default new Vuex.Store({
         headers: {},
       }
       if (useToken) {
-        options.headers['Authorization'] = `Bearer ${getters.getToken}`;
+        options.headers['Authorization'] = `Bearer ${state.token}`;
       }
       if (!form) {
         options.headers['Content-Type'] = 'application/json';
@@ -68,21 +68,18 @@ export default new Vuex.Store({
         }
         options.body = formData
       }
-      await fetch(`${getters.getHost}/${path}`, options)
+      await fetch(`${state.host}/${path}`, options)
         .then(res => res.json())
-        .then(result => {
-          console.log(result);
-          return result.error ? commit("setErrors", result.error) : commit("setData", result)
-        })
+        .then(result => result.error ? commit("setErrors", result.error) : commit("setData", result))
         .catch(err => err);
     },
-    async getUserRole({ dispatch, commit, getters }) {
+    async getUserRole({ state, dispatch, commit }) {
       await dispatch('f', { path: "user" });
-      if (getters.getData) return commit("setRole", "admin")
+      if (state.data) return commit("setRole", "admin")
       await dispatch('f', {
         path: "work-shift/1/order"
       })
-      if (getters.getData || getters.getErrors.message != "Forbidden for you") return commit("setRole", "waiter")
+      if (state.data || state.errors.message != "Forbidden for you") return commit("setRole", "waiter")
       return commit("setRole", "cook")
     },
     async Login(context, body) {
@@ -106,7 +103,6 @@ export default new Vuex.Store({
           "Authorization": `Bearer ${this.getters.getToken}`
         },
       })
-      localStorage.clear()
       context.commit("clearUser")
     },
     async GetUsers() {

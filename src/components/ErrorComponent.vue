@@ -10,7 +10,7 @@
 </template>
 
 <script>
-import { mapMutations } from "vuex";
+import { mapMutations, mapState } from "vuex";
 
 export default {
   name: "ErrorComponent",
@@ -23,9 +23,7 @@ export default {
     setTimeout(() => this.clear(), 3000);
   },
   computed: {
-    errors() {
-      return this.$store.getters.getErrors;
-    },
+    ...mapState(["errors"]),
   },
 };
 </script>

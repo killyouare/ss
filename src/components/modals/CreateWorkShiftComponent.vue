@@ -23,36 +23,39 @@
       <button @click.prevent="createWorkShift" class="approve_button">
         Отправить
       </button>
-      <button @click="$emit('open')" class="cancel_button">Отмена</button>
+      <button @click.prevent="clearModal" class="cancel_button">Отмена</button>
     </div>
   </form>
 </template>
 
 <script>
+import { mapMutations, mapActions, mapState } from "vuex";
 export default {
   data: () => ({
-    body: {
-      start: "",
-      end: "",
-    },
-    errors: false,
+    body: {},
   }),
   methods: {
+    ...mapMutations(["clearModal"]),
+    ...mapActions(["f"]),
     async createWorkShift() {
-      const result = await this.$store.dispatch("CreateWorkShift", {
-        start: this.body.start.replace("T", " "),
-        end: this.body.end.replace("T", " "),
+      await this.f({
+        path: "work-shift",
+        method: "post",
+        data: {
+          start: this.body.start?.replace("T", " "),
+          end: this.body.end?.replace("T", " "),
+        },
       });
-      if (result) {
-        this.$emit("add", {
-          start: this.body.start.replace("T", " "),
-          end: this.body.end.replace("T", " "),
-          id: result.id,
+      if (this.data) {
+        this.f({
+          path: "work-shift",
         });
-        return this.$emit("open");
+        return this.clearModal();
       }
-      this.errors = true;
     },
+  },
+  computed: {
+    ...mapState(["data"]),
   },
   destroyed() {
     this.body = null;

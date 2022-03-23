@@ -17,7 +17,7 @@
 </template>
 
 <script>
-import { mapMutations, mapActions, mapGetters } from "vuex";
+import { mapMutations, mapActions, mapState, mapGetters } from "vuex";
 
 export default {
   name: "LoginComponent",
@@ -34,8 +34,8 @@ export default {
         data: this.body,
         useToken: false,
       });
-      if (this.getData) {
-        this.setToken(this.getData.data.user_token);
+      if (this.data) {
+        this.setToken(this.getData.user_token);
         this.getUserRole();
         return this.clearModal();
       }
@@ -43,6 +43,7 @@ export default {
   },
   computed: {
     ...mapGetters(["getData"]),
+    ...mapState(["data", "modal"]),
   },
   destroyed() {
     this.body = null;

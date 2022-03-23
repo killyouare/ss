@@ -62,7 +62,6 @@
       v-if="addOrder && (status == 'Принят') | (status == 'Готовится')"
       class="approve_button"
       @click.prevent="$emit('open')"
-      href="#"
       >Добавить заказ</a
     >
   </article>

@@ -1,48 +1,52 @@
 <template>
   <article>
-    <Error v-if="getErrors" />
     <h2>Смена №{{ id }}</h2>
     <p>Начало смены в {{ start }}</p>
     <p>Конец смены в {{ end }}</p>
-    <p :class="activese ? 'working' : 'fired'">
-      Статус: {{ activese ? "Открыта" : "Закрыта" }}
+    <p :class="active ? 'working' : 'fired'">
+      Статус: {{ active ? "Открыта" : "Закрыта" }}
     </p>
     <a
-      v-if="role == 'admin'"
-      :class="activese ? 'cancel_button' : 'approve_button'"
-      @click.prevent="activese ? close() : open()"
-      href="#"
-      >{{ activese ? "Закрыть" : "Открыть" }}</a
+      v-if="role == 'admin' && ws"
+      :class="active ? 'cancel_button' : 'approve_button'"
+      @click.prevent="active ? change('close') : change('open')"
+      
+      >{{ active ? "Закрыть" : "Открыть" }}</a
     >
     <router-link
-      v-if="role == 'admin'"
+      v-if="role == 'admin' && ws"
       class="approve_button"
       :to="{ name: 'orders', params: { id: id } }"
       >Управление</router-link
+    >
+    <router-link
+      v-if="role == 'admin' && !ws"
+      class="approve_button"
+      :to="{ name: 'WorkerOnShift', params: { id: id } }"
+      >Добавить сотрудников</router-link
     >
   </article>
 </template>
 
 <script>
-import Error from "./modals/ErrorComponent";
+import { mapActions, mapState } from "vuex";
 export default {
   name: "WorkShiftComponent",
-  props: ["id", "start", "end", "active"],
-  components: { Error },
+  props: ["id", "start", "end", "active", "ws"],
   methods: {
-    async open() {
-      const res = await this.$store.dispatch("OpenShift", this.id);
-      if (res) {
-        return (this.activese = !this.activese);
-      }
-    },
-    async close() {
-      const res = await this.$store.dispatch("CloseShift", this.id);
-      if (res) {
-        return (this.activese = !this.activese);
-      }
+    ...mapActions(["f"]),
+    
+    change(status) {
+      this.f({
+        path: `work-shift/${this.id}/${status}`,
+      });
+      this.f({
+        path: "work-shift",
+      });
     },
   },
-  computed: {},
+  computed: {
+    ...mapState(["role", "errors"]),
+  },
 };
 </script>

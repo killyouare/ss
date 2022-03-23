@@ -7,7 +7,7 @@
       <a
         v-if="!token"
         @click.prevent="modal('login')"
-        href="#"
+        
         class="approve_button"
       >
         Вход</a
@@ -17,7 +17,7 @@
       <router-link v-if="role == 'waiter' || role == 'cook'" to="/orders"
         >Заказы</router-link
       >
-      <a v-if="token" @click.prevent="logout" href="#" class="cancel_button"
+      <a v-if="token" @click.prevent="logout"  class="cancel_button"
         >Выход</a
       >
     </nav>
@@ -25,9 +25,7 @@
 </template>
 
 <script>
-import { mapMutations } from "vuex";
-import { mapActions } from "vuex";
-import { mapGetters } from "vuex";
+import { mapMutations, mapActions, mapState } from "vuex";
 
 export default {
   name: "NavigationComponent",
@@ -36,27 +34,20 @@ export default {
       modal: "setModal",
       clearUser: "clearUser",
     }),
-    ...mapActions(["f"]),
-    ...mapGetters([]),
+    ...mapActions(["f", "CheckUser"]),
     async logout() {
       await this.f({
         path: "logout",
       });
-      localStorage.clear();
       this.clearUser();
       this.$router.push({ name: "Home" }).catch((err) => err);
     },
   },
-  async mounted() {
-    await this.$store.dispatch("CheckUser");
+  mounted() {
+    this.CheckUser();
   },
   computed: {
-    role() {
-      return this.$store.getters.getRole;
-    },
-    token() {
-      return this.$store.getters.getToken;
-    },
+    ...mapState(["role", "token"]),
   },
 };
 </script>

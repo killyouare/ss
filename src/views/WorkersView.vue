@@ -7,7 +7,7 @@
       <a @click.prevent="setModal('worker')">+</a>
     </article>
     <User
-      v-for="user in getData.data"
+      v-for="user in getData"
       :key="user.id"
       :id="user.id"
       :name="user.name"
@@ -23,8 +23,8 @@ import { mapMutations, mapGetters, mapActions } from "vuex";
 import User from "../components/WorkerComponent";
 export default {
   components: { User },
-  mounted() {
-    this.f({ path: "user" });
+  async mounted() {
+    await this.f({ path: "user" });
   },
   methods: {
     ...mapMutations(["setModal"]),

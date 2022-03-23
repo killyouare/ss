@@ -6,16 +6,16 @@
       <span>Должность</span>
     </article>
     <User
-      :id="getData.data.id"
+      :id="getData.id"
       :name="
-        getData.data.surname
-          ? getData.data.patronymic
-            ? `${getData.data.surname} ${getData.data.name} ${getData.data.patronymic}`
-            : `${getData.data.surname} ${getData.data.name}`
-          : getData.data.name
+        getData.surname
+          ? getData.patronymic
+            ? `${getData.surname} ${getData.name} ${getData.patronymic}`
+            : `${getData.surname} ${getData.name}`
+          : getData.name
       "
-      :group="getData.data.group"
-      :status="getData.data.status"
+      :group="getData.group"
+      :status="getData.status"
       :dismiss="true"
     />
   </section>

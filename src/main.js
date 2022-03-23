@@ -3,8 +3,16 @@ import App from "./App.vue";
 import router from "./router";
 import store from "./store";
 
-Vue.config.productionTip = false;
+window.onerror = function (message) {
+  console.log('ONE ERROR HANDLER TO RULE THEM ALL:', message);
+}
 
+Vue.config.productionTip = false;
+Vue.config.devtools = false;
+
+Vue.config.errorHandler = function (err, vm, info) {
+  console.log(`Error: ${err.toString()}\nInfo: ${info}`);
+}
 new Vue({
   router,
   store,

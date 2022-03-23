@@ -1,13 +1,13 @@
 <template>
   <section class="orders">
     <WorkShift
-      :id="workShift.id"
-      :start="workShift.start"
-      :end="workShift.end"
-      :active="workShift.active"
+      :id="getData.id"
+      :start="getData.start"
+      :end="getData.end"
+      :active="getData.active"
     />
     <Order
-      v-for="order in workShift.orders"
+      v-for="order in getData.orders"
       :key="order.id"
       :id="order.id"
       :table="order.table"
@@ -19,20 +19,22 @@
 </template>
 
 <script>
+import { mapActions, mapGetters } from "vuex";
 import Order from "../components/OrderComponent";
-import WorkShift from "../components/DetailWorkShiftComponent";
+import WorkShift from "../components/WorkShiftComponent";
 export default {
-  data() {
-    return {
-      workShift: [],
-    };
-  },
   components: { Order, WorkShift },
-  async mounted() {
-    this.workShift = await this.$store.dispatch(
-      "GetOrders",
-      this.$route.params.id
-    );
+  mounted() {
+    this.f({
+      path: `work-shift/${this.$route.params.id}/order`,
+    });
+    console.log(this.getData);
+  },
+  methods: {
+    ...mapActions(["f"]),
+  },
+  computed: {
+    ...mapGetters(["getData"]),
   },
 };
 </script>

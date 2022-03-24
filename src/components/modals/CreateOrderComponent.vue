@@ -8,6 +8,8 @@
         type="number"
         name="password"
         id="table_id"
+        min="1"
+        max="8"
       />
     </div>
     <div>
@@ -21,45 +23,41 @@
     </div>
     <div>
       <button @click="add" class="approve_button">Отправить</button>
-      <button class="cancel_button" @click="$emit('open')">Отмена</button>
+      <button class="cancel_button" @click="clearModal">Отмена</button>
     </div>
   </form>
 </template>
 
 <script>
+import { mapMutations, mapGetters, mapActions } from "vuex";
 export default {
-  props: ["users", "id"],
   data() {
     return {
-      body: {
-        work_shift_id: this.id,
-        table_id: "",
-        number_of_person: "",
-      },
-      errors: false,
+      body: {},
     };
   },
   methods: {
+    ...mapActions(["f"]),
+    ...mapMutations(["clearModal"]),
     async add() {
-      this.errors = false;
-      const message = (await this.$store.dispatch("createOrder", this.body))
-        .data;
-      if (message) {
-        this.$emit("add", {
-          id: message.id,
-          table: message.table,
-          shift_workers: message.shift_workers,
-          status: message.status,
-          price: message.price,
-        });
-        return this.$emit("open");
+      await this.f({
+        path: "order",
+        method: "post",
+        data: {
+          work_shift_id: this.getData.id,
+          table_id: this.body.table_id,
+          number_of_person: this.body.number_of_person,
+        },
+      });
+      if (this.getData) {
+        await this.f({ path: "work-shift/active/get" });
+        await this.f({ path: `work-shift/${this.getData.id}/order` });
+        return this.clearModal();
       }
-      this.errors = true;
     },
   },
-  destroy() {
-    this.body = null;
-    this.errors = null;
+  computed: {
+    ...mapGetters(["getData"]),
   },
 };
 </script>

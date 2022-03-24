@@ -1,11 +1,10 @@
 <template>
   <section class="orders">
     <WorkShift
-      :id="orders.id"
+      :id="get.id"
       :start="orders.start"
       :end="orders.end"
       :active="orders.active"
-      :order="true"
     />
     <Order
       v-for="order in orders.orders"
@@ -22,42 +21,20 @@
 </template>
 
 <script>
+import { mapActions, mapGetters, mapState } from "vuex";
 import Order from "../components/OrderComponent";
 import WorkShift from "../components/DetailOrderComponent";
 export default {
   components: { Order, WorkShift },
-  data() {
-    return {
-      orders: [],
-      modal: false,
-      userRole: "",
-    };
-  },
   methods: {
-    openModal() {
-      this.modal = !this.modal;
-    },
-    add(body) {
-      this.orders.orders.push(body);
-    },
+    ...mapActions(["f"]),
   },
   async mounted() {
-    const role = this.$store.getters.getRole;
-    this.userRole = role;
-
-    role === "waiter"
-      ? (this.orders = (
-          await this.$store.dispatch(
-            "WaiterGetOrders",
-            (
-              await this.$store.dispatch("active")
-            ).data.id
-          )
-        ).data)
-      : (this.orders = {
-          orders: (await this.$store.dispatch("getOrdersCook")).data,
-        });
-    console.log(this.orders);
+    
+  },
+  computed: {
+    ...mapGetters([]),
+    ...mapState(["role"]),
   },
 };
 </script>

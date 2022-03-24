@@ -10,7 +10,8 @@
       :start="workShift.start"
       :end="workShift.end"
       :active="workShift.active"
-      :ws="true"
+      :ws="false"
+      :started="new Date() < new Date(workShift.start)"
     />
   </section>
 </template>

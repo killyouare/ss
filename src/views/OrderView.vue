@@ -5,6 +5,7 @@
       :start="getData.start"
       :end="getData.end"
       :active="getData.active"
+      :ws="new Date() < new Date(getData.start)"
     />
     <Order
       v-for="order in getData.orders"
@@ -19,22 +20,30 @@
 </template>
 
 <script>
-import { mapActions, mapGetters } from "vuex";
+import { mapActions, mapGetters, mapState } from "vuex";
 import Order from "../components/OrderComponent";
 import WorkShift from "../components/WorkShiftComponent";
 export default {
   components: { Order, WorkShift },
-  mounted() {
+  async mounted() {
+    if (this.role == "admin")
+      return this.f({
+        path: `work-shift/${this.$route.params.id}/order`,
+      });
+    if (this.role == "waiter") {
+      await this.f({ path: "work-shift/active/get" });
+      return this.f({ path: `work-shift/${this.getData.id}/order` });
+    }
     this.f({
-      path: `work-shift/${this.$route.params.id}/order`,
+      path: `order/taken/get`,
     });
-    console.log(this.getData);
   },
   methods: {
     ...mapActions(["f"]),
   },
   computed: {
     ...mapGetters(["getData"]),
+    ...mapState(["role"]),
   },
 };
 </script>

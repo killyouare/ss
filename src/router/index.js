@@ -5,7 +5,6 @@ import WorkerView from "../views/WorkerView";
 import OrderView from "../views/OrderView";
 import WorkShiftView from "../views/WorkShiftView";
 import WorkerOnShift from "../views/WorkerOnShift";
-import Order from "../views/OrdersView";
 import DetailOrder from "../views/DetailOrderView";
 import Home from "../views/HomeView";
 
@@ -40,7 +39,7 @@ const routes = [
   {
     path: "/orders",
     name: "OrdersWaiter",
-    component: Order,
+    component: OrderView,
   },
   {
     path: "/order/:id",

@@ -70,7 +70,10 @@ export default new Vuex.Store({
       }
       await fetch(`${state.host}/${path}`, options)
         .then(res => res.json())
-        .then(result => result.error ? commit("setErrors", result.error) : commit("setData", result))
+        .then(result => {
+          console.log(result)
+          return result.error ? commit("setErrors", result.error) : commit("setData", result)
+        })
         .catch(err => err);
     },
     async getUserRole({ state, dispatch, commit }) {

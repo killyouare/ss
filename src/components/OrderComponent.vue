@@ -2,24 +2,20 @@
   <article>
     <h2>{{ table }}</h2>
     <p>Официант: {{ shift_workers }}</p>
-    <p>Статус: {{ statused }}</p>
+    <p>Статус: {{ status }}</p>
     <p>Цена: {{ price }}</p>
     <label
       v-if="
-        (userRole == 'waiter' &&
-          (statused == 'Принят' || statused == 'Готов')) ||
-        (userRole == 'cook' &&
-          (statused == 'Принят' || statused == 'Готовится'))
+        (role == 'waiter' && (status == 'Принят' || status == 'Готов')) ||
+        (role == 'cook' && (status == 'Принят' || status == 'Готовится'))
       "
       for="status"
       >Статус</label
     >
     <select
       v-if="
-        (userRole == 'waiter' &&
-          (statused == 'Принят' || statused == 'Готов')) ||
-        (userRole == 'cook' &&
-          (statused == 'Принят' || statused == 'Готовится'))
+        (role == 'waiter' && (status == 'Принят' || status == 'Готов')) ||
+        (role == 'cook' && (status == 'Принят' || status == 'Готовится'))
       "
       @change="change"
       v-model="body.status"
@@ -27,47 +23,35 @@
       id="status"
     >
       <option value="nothing" selected disabled>Выберите статус:</option>
-      <option
-        v-if="userRole == 'cook' && statused == 'Принят'"
-        value="preparing"
-      >
+      <option v-if="role == 'cook' && status == 'Принят'" value="preparing">
         Готовится
       </option>
-      <option
-        v-if="userRole == 'cook' && statused == 'Готовится'"
-        value="ready"
-      >
+      <option v-if="role == 'cook' && status == 'Готовится'" value="ready">
         Готов
       </option>
-      <option
-        v-if="userRole == 'waiter' && statused == 'Принят'"
-        value="canceled"
-      >
+      <option v-if="role == 'waiter' && status == 'Принят'" value="canceled">
         Отменен
       </option>
-      <option
-        v-if="userRole == 'waiter' && statused == 'Готов'"
-        value="paid-up"
-      >
+      <option v-if="role == 'waiter' && status == 'Готов'" value="paid-up">
         Оплачен
       </option>
     </select>
     <router-link
-      v-if="addOptions"
       class="approve_button"
       :to="{ name: 'OneOrder', params: { id: id } }"
       >Подробнее</router-link
     >
     <a
-      v-if="addOrder && (status == 'Принят') | (status == 'Готовится')"
+      v-if="role == 'waiter' && (status == 'Принят') | (status == 'Готовится')"
       class="approve_button"
-      @click.prevent="$emit('open')"
+      @click.prevent=""
       >Добавить заказ</a
     >
   </article>
 </template>
 
 <script>
+import { mapState, mapActions, mapGetters } from "vuex";
 export default {
   name: "OrderComponent",
   props: [
@@ -81,26 +65,32 @@ export default {
   ],
   data() {
     return {
-      statused: this.status,
       statuses: {
         preparing: "Готовится",
         ready: "Готов",
         "paid-up": "Оплачен",
         canceled: "Отменен",
       },
-      userRole: this.$store.getters.getRole,
-      errors: false,
       body: { id: this.id, status: "nothing" },
     };
   },
   methods: {
+    ...mapActions(["f"]),
     async change() {
-      const message = await this.$store.dispatch("changeStatus", this.body);
-      console.log(message.data);
-      if (message.data)
-        return (this.statused = this.statuses[this.body.status]);
-      this.errors = true;
+      await this.f({
+        path: `order/${this.id}/change-status`,
+        method: "patch",
+        data: { status: this.body.status },
+      });
+      if (this.getData) {
+        await this.f({ path: "work-shift/active/get" });
+        return this.f({ path: `work-shift/${this.getData.id}/order` });
+      }
     },
+  },
+  computed: {
+    ...mapState(["role"]),
+    ...mapGetters(["getData"]),
   },
 };
 </script>

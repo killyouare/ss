@@ -6,7 +6,9 @@
     <p>Цена: {{ price }}</p>
     <label
       v-if="
-        (role == 'waiter' && (status == 'Принят' || status == 'Готов')) ||
+        (about &&
+          role == 'waiter' &&
+          (status == 'Принят' || status == 'Готов')) ||
         (role == 'cook' && (status == 'Принят' || status == 'Готовится'))
       "
       for="status"
@@ -14,7 +16,9 @@
     >
     <select
       v-if="
-        (role == 'waiter' && (status == 'Принят' || status == 'Готов')) ||
+        (about &&
+          role == 'waiter' &&
+          (status == 'Принят' || status == 'Готов')) ||
         (role == 'cook' && (status == 'Принят' || status == 'Готовится'))
       "
       @change="change"
@@ -37,21 +41,26 @@
       </option>
     </select>
     <router-link
+      v-if="about"
       class="approve_button"
       :to="{ name: 'OneOrder', params: { id: id } }"
       >Подробнее</router-link
     >
     <a
-      v-if="role == 'waiter' && (status == 'Принят') | (status == 'Готовится')"
+      v-if="
+        (status == 'Принят') | (status == 'Готовится') &&
+        role == 'waiter' &&
+        addOrder
+      "
       class="approve_button"
-      @click.prevent=""
+      @click.prevent="setModal('position')"
       >Добавить заказ</a
     >
   </article>
 </template>
 
 <script>
-import { mapState, mapActions, mapGetters } from "vuex";
+import { mapState, mapActions, mapGetters, mapMutations } from "vuex";
 export default {
   name: "OrderComponent",
   props: [
@@ -60,8 +69,8 @@ export default {
     "price",
     "status",
     "shift_workers",
-    "addOptions",
     "addOrder",
+    "about",
   ],
   data() {
     return {
@@ -71,10 +80,11 @@ export default {
         "paid-up": "Оплачен",
         canceled: "Отменен",
       },
-      body: { id: this.id, status: "nothing" },
+      body: { status: "nothing" },
     };
   },
   methods: {
+    ...mapMutations(["setModal"]),
     ...mapActions(["f"]),
     async change() {
       await this.f({
@@ -83,6 +93,10 @@ export default {
         data: { status: this.body.status },
       });
       if (this.getData) {
+        if (this.role == "cook")
+          return this.f({
+            path: `order/taken/get`,
+          });
         await this.f({ path: "work-shift/active/get" });
         return this.f({ path: `work-shift/${this.getData.id}/order` });
       }

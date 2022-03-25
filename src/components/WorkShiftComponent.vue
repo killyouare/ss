@@ -1,5 +1,5 @@
 <template>
-  <article>
+  <article class="order">
     <h2>Смена №{{ id }}</h2>
     <p>Начало смены в {{ start }}</p>
     <p>Конец смены в {{ end }}</p>

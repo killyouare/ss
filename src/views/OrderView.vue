@@ -1,6 +1,7 @@
 <template>
   <section class="orders">
     <WorkShift
+      v-if="role != 'cook'"
       :id="getData.id"
       :start="getData.start"
       :end="getData.end"
@@ -8,13 +9,14 @@
       :ws="new Date() < new Date(getData.start)"
     />
     <Order
-      v-for="order in getData.orders"
+      v-for="order in getData.orders ? getData.orders : getData"
       :key="order.id"
       :id="order.id"
       :table="order.table"
       :shift_workers="order.shift_workers"
       :status="order.status"
       :price="order.price"
+      :about="true"
     />
   </section>
 </template>

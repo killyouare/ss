@@ -48,7 +48,17 @@ a {
 a:hover {
   transform: rotate(-15deg);
 }
-
+/* errors */
+.error {
+  position: absolute;
+  top: 15vh;
+  right: 5vw;
+  padding: 5px;
+  border-radius: 5px;
+  background: rgba(201, 26, 13, 0.98);
+  color: white;
+  z-index: 110;
+}
 /* modal */
 
 .modal {
@@ -239,7 +249,7 @@ header img {
   grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
 }
 
-.orders > :first-child {
+.orders > .order {
   position: fixed;
   right: 10rem;
   bottom: 100px;

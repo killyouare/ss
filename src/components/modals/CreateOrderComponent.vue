@@ -3,14 +3,12 @@
     <h2>Добавление заказа</h2>
     <div>
       <label for="table_id">Номер столика</label>
-      <input
-        v-model="body.table_id"
-        type="number"
-        name="password"
-        id="table_id"
-        min="1"
-        max="8"
-      />
+      <select v-model="body.table_id" id="table_id">
+        <option value="nothing" selected disabled>Выберите столик</option>
+        <option v-for="table in data" :key="table.id" :value="table.id">
+          {{ table.name }}
+        </option>
+      </select>
     </div>
     <div>
       <label for="number_of_person">Количество персон</label>
@@ -19,6 +17,16 @@
         type="number"
         name="password"
         id="number_of_person"
+        min="1"
+        :max="
+          body.table_id != 'nothing'
+            ? data
+              ? data.find((value) => {
+                  if (value.id === this.body.table_id) return value;
+                }).capacity
+              : 3
+            : 3
+        "
       />
     </div>
     <div>
@@ -29,11 +37,14 @@
 </template>
 
 <script>
-import { mapMutations, mapGetters, mapActions } from "vuex";
+import { mapMutations, mapState, mapActions, mapGetters } from "vuex";
 export default {
   data() {
     return {
-      body: {},
+      orderId: "",
+      body: {
+        table_id: "nothing",
+      },
     };
   },
   methods: {
@@ -44,7 +55,7 @@ export default {
         path: "order",
         method: "post",
         data: {
-          work_shift_id: this.getData.id,
+          work_shift_id: this.orderId,
           table_id: this.body.table_id,
           number_of_person: this.body.number_of_person,
         },
@@ -54,10 +65,16 @@ export default {
         await this.f({ path: `work-shift/${this.getData.id}/order` });
         return this.clearModal();
       }
+      this.f({ path: "table" });
     },
   },
   computed: {
+    ...mapState(["data"]),
     ...mapGetters(["getData"]),
+  },
+  mounted() {
+    this.orderId = this.data.data.id;
+    this.f({ path: "table" });
   },
 };
 </script>

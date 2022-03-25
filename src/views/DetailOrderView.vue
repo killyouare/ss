@@ -1,65 +1,44 @@
 <template>
   <section class="orders">
     <Order
-      :id="orders.id"
-      :table="orders.table"
-      :shift_workers="orders.shift_workers"
-      :price="orders.price_all"
-      :status="orders.status"
+      :id="getData.id"
+      :table="getData.table"
+      :shift_workers="getData.shift_workers"
+      :price="getData.price_all"
+      :status="getData.status"
       :addOrder="true"
-      @open="openModal"
+      class="order"
     />
     <Table
-      v-for="order in orders.positions"
+      v-for="order in getData.positions"
       :key="order.id"
       :id="order.id"
       :position="order.position"
       :shift_workers="order.shift_workers"
       :count="order.count"
       :price="order.price"
-      :status="orders.status"
-      @del="del"
+      :status="getData.status"
     />
   </section>
 </template>
 
 
 <script>
+import { mapActions, mapGetters } from "vuex";
 import Table from "../components/DetailOrdersComponent";
 import Order from "../components/OrderComponent";
 export default {
-  data() {
-    return {
-      orders: [],
-      modal: false,
-      error: false,
-    };
-  },
   components: { Table, Order },
   methods: {
-    del(id) {
-      const positions = this.orders.positions;
-      positions.splice(
-        positions.findIndex((value) => {
-          if (value.id == id) {
-            return value;
-          }
-        }),
-        1
-      );
-    },
-    add(orders) {
-      this.orders = orders;
-    },
-    openModal() {
-      this.modal = !this.modal;
-    },
+    ...mapActions(["f"]),
   },
-  async mounted() {
-    this.orders = (
-      await this.$store.dispatch("getOrder", this.$route.params.id)
-    ).data;
-    console.log(this.orders.status);
+  mounted() {
+    this.f({
+      path: `order/${this.$route.params.id}`,
+    });
+  },
+  computed: {
+    ...mapGetters(["getData"]),
   },
 };
 </script>

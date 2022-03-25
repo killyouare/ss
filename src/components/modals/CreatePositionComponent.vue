@@ -4,56 +4,53 @@
     <div>
       <label for="menu_id">Номер товара из меню</label>
       <select v-model="body.menu_id" id="menu_id">
-        <option v-for="menu in menus" :key="menu.id" :value="menu.id">
+        <option v-for="menu in data" :key="menu.id" :value="menu.id">
           {{ menu.name }} - {{ menu.price }}
         </option>
       </select>
     </div>
     <div>
       <label for="number_of_person">Количество</label>
-      <input
-        v-model="body.count"
-        type="number"
-        min="1"
-        max="10"
-        id="number_of_person"
-      />
+      <input v-model="body.count" type="number" min="1" max="10" />
     </div>
     <div>
       <button @click="add" class="approve_button">Отправить</button>
-      <button class="cancel_button" @click="$emit('open')">Отмена</button>
+      <button class="cancel_button" @click="clearModal">Отмена</button>
     </div>
   </form>
 </template>
 
 <script>
+import { mapMutations, mapGetters, mapActions, mapState } from "vuex";
 export default {
-  props: ["users", "id"],
   data() {
     return {
+      id: "",
       body: {
         menu_id: "",
         count: "",
       },
-      menus: [],
-      errors: false,
     };
   },
   methods: {
+    ...mapActions(["f"]),
+    ...mapMutations(["clearModal"]),
     async add() {
-      this.errors = false;
-      const message = (await this.$store.dispatch("createPosition", this.body))
-        .data;
-      if (message) {
-        this.$emit("add", message);
-        return this.$emit("open");
-      }
-      this.errors = true;
+      await this.f({
+        path: `order/${this.$route.params.id}/position`,
+        method: "post",
+        data: this.body,
+      });
+      if (this.getData) return this.clearModal();
+      await this.f({ path: "menu" });
     },
   },
   async mounted() {
-    this.menus = await this.$store.dispatch("getMenu");
-    this.body.id = this.$route.params.id;
+    await this.f({ path: "menu" });
+  },
+  computed: {
+    ...mapGetters(["getData"]),
+    ...mapState(["data", "errors"]),
   },
   destroy() {
     this.body = null;

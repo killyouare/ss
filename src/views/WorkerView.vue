@@ -5,7 +5,7 @@
       <span>Статус</span>
       <span>Должность</span>
     </article>
-    <User
+    <Worker
       :id="getData.id"
       :name="
         getData.surname
@@ -22,10 +22,10 @@
 </template>
 
 <script>
-import User from "../components/WorkerComponent";
+import Worker from "../components/WorkerComponent";
 import { mapActions, mapGetters } from "vuex";
 export default {
-  components: { User },
+  components: { Worker },
 
   mounted() {
     this.f({

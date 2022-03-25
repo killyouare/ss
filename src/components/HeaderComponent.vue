@@ -33,7 +33,7 @@ export default {
         path: "logout",
       });
       this.clearUser();
-      this.$router.push({ name: "Home" }).catch((err) => err);
+      this.$router.push({ name: "home" }).catch((err) => err);
     },
   },
   async mounted() {

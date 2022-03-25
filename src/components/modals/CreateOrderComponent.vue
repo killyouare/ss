@@ -62,7 +62,7 @@ export default {
       });
       if (this.getData) {
         await this.f({ path: "work-shift/active/get" });
-        await this.f({ path: `work-shift/${this.getData.id}/order` });
+
         return this.clearModal();
       }
       this.f({ path: "table" });
@@ -75,6 +75,9 @@ export default {
   mounted() {
     this.orderId = this.data.data.id;
     this.f({ path: "table" });
+  },
+  async destroyed() {
+    this.f({ path: `work-shift/${this.getData.id}/order` });
   },
 };
 </script>

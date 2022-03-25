@@ -7,7 +7,7 @@
       Статус: {{ active ? "Открыта" : "Закрыта" }}
     </p>
     <a
-      v-if="role == 'admin' && (started || (!started && active))"
+      v-if="role == 'admin' && !ws && (started || (!started && active))"
       :class="active ? 'cancel_button' : 'approve_button'"
       @click.prevent="active ? change('close') : change('open')"
       >{{ active ? "Закрыть" : "Открыть" }}</a
@@ -42,10 +42,10 @@ export default {
     ...mapActions(["f"]),
     ...mapMutations(["setModal"]),
     async change(status) {
-      await this.f({
+      this.f({
         path: `work-shift/${this.id}/${status}`,
       });
-      this.f({
+      await this.f({
         path: "work-shift",
       });
     },

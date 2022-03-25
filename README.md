@@ -1,24 +1,17 @@
-# proj
+# VueCLI proj
 
-## Project setup
-```
+
+
+## Установка проекта
+```bash
+git clone https://github.com/killyouare/ss
+cd ss
 npm install
 ```
 
-### Compiles and hot-reloads for development
-```
+### Запуск сервера для разработки
+```bash
 npm run serve
 ```
-
-### Compiles and minifies for production
-```
-npm run build
-```
-
-### Lints and fixes files
-```
-npm run lint
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+## Примечания
+Для установки понадобится [api](https://github.com/jurapro/api-cafe). После запуска сервера не забудьте поменять host в ./src/store/index.js

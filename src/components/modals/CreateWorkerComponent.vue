@@ -66,8 +66,6 @@ export default {
     ...mapGetters(["getData"]),
   },
   destroyed() {
-    this.body = null;
-    this.roles = null;
     this.f({ path: "user" });
   },
 };

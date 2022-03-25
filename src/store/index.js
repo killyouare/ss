@@ -10,7 +10,7 @@ export default new Vuex.Store({
     data: null,
     role: null,
     modal: null,
-    host: process.env.HOST || "http://127.0.0.1:8000/api-cafe"
+    host: "http://127.0.0.1:8000/api-cafe"
   },
   getters: {
     getData: (state) =>
@@ -42,7 +42,6 @@ export default new Vuex.Store({
 
   },
   actions: {
-
     async f({ commit, state }, { path, method = 'get', data = [], useToken = true, form = false }) {
       commit("clearData");
       commit("clearErrors");

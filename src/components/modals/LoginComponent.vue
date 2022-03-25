@@ -45,8 +45,5 @@ export default {
     ...mapGetters(["getData"]),
     ...mapState(["data", "modal"]),
   },
-  destroyed() {
-    this.body = null;
-  },
 };
 </script>

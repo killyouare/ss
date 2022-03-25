@@ -6,7 +6,7 @@
       <span>Должность</span>
       <a @click.prevent="setModal('worker')">+</a>
     </article>
-    <User
+    <Worker
       v-for="user in getData"
       :key="user.id"
       :id="user.id"
@@ -20,9 +20,9 @@
 <script>
 import { mapMutations, mapGetters, mapActions } from "vuex";
 
-import User from "../components/WorkerComponent";
+import Worker from "../components/WorkerComponent";
 export default {
-  components: { User },
+  components: { Worker },
   async mounted() {
     await this.f({ path: "user" });
   },

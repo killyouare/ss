@@ -9,7 +9,7 @@
       :addOrder="true"
       class="order"
     />
-    <Table
+    <Position
       v-for="order in getData.positions"
       :key="order.id"
       :id="order.id"
@@ -25,10 +25,10 @@
 
 <script>
 import { mapActions, mapGetters } from "vuex";
-import Table from "../components/DetailOrdersComponent";
+import Position from "../components/PositionComponent";
 import Order from "../components/OrderComponent";
 export default {
-  components: { Table, Order },
+  components: { Position, Order },
   methods: {
     ...mapActions(["f"]),
   },

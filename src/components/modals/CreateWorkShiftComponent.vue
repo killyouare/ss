@@ -47,9 +47,6 @@ export default {
         },
       });
       if (this.data) {
-        this.f({
-          path: "work-shift",
-        });
         return this.clearModal();
       }
     },
@@ -58,8 +55,9 @@ export default {
     ...mapState(["data"]),
   },
   destroyed() {
-    this.body = null;
-    this.errors = null;
+    this.f({
+      path: "work-shift",
+    });
   },
 };
 </script>

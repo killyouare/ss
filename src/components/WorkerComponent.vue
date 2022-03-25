@@ -52,11 +52,11 @@ export default {
         });
       this.f({ path: `work-shift/${this.$route.params.id}` });
     },
-    dismissUser() {
-      this.f({
+    async dismissUser() {
+      await this.f({
         path: `user/${this.$route.params.id}/to-dismiss`,
       });
-      this.f({
+      await this.f({
         path: `user/${this.$route.params.id}`,
       });
     },

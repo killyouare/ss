@@ -26,7 +26,7 @@
 </template>
 
 <script>
-import { mapActions, mapGetters, mapState } from "vuex";
+import { mapActions, mapGetters } from "vuex";
 import User from "../components/WorkerComponent";
 export default {
   data() {
@@ -44,7 +44,6 @@ export default {
     ...mapActions(["f"]),
   },
   computed: {
-    ...mapState([""]),
     ...mapGetters(["getData"]),
   },
 };
